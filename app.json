@@ -12,17 +12,17 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.mobile-apps"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.bank_sampah.com"
     },
     "web": {
       "bundler": "metro",
@@ -30,7 +30,21 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-secure-store",
+      "expo-asset",
+      "expo-font"
+      // [
+      //   "expo-build-properties",
+      //   {
+      //     "android": {
+      //       "newArchEnabled": true,
+      //       "compileSdkVersion": 34,
+      //       "targetSdkVersion": 34,
+      //       "buildToolsVersion": "34.0.0"
+      //     }
+      //   }
+      // ]
     ],
     "experiments": {
       "typedRoutes": true
