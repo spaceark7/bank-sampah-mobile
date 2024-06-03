@@ -32,7 +32,7 @@ export default function TabLayout() {
           borderTopColor:
             theme.mode === 'dark'
               ? theme.colors.shade700
-              : theme.colors.shade300,
+              : theme.colors.shade300
         },
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
@@ -41,12 +41,11 @@ export default function TabLayout() {
           <View
             style={{
               height: 100,
-              width: '100%',
+              width: '100%'
             }}
           />
-        ),
-      }}
-    >
+        )
+      }}>
       <Tabs.Screen
         name='index'
         options={{
@@ -61,7 +60,7 @@ export default function TabLayout() {
 
           headerLeft: () => <Text> Profile Header </Text>,
           headerLeftContainerStyle: {
-            marginLeft: 15,
+            marginLeft: 15
           },
           headerRight: () => (
             <Pressable>
@@ -69,17 +68,17 @@ export default function TabLayout() {
                 <FontAwesome
                   name={theme.mode === 'dark' ? 'sun-o' : 'moon-o'}
                   size={25}
-                  color={theme.colors.primaryTextColor}
+                  color={theme.colors.textColor}
                   onPress={() =>
                     updateTheme({
-                      mode: theme.mode === 'dark' ? 'light' : 'dark',
+                      mode: theme.mode === 'dark' ? 'light' : 'dark'
                     })
                   }
                   style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                 />
               )}
             </Pressable>
-          ),
+          )
         }}
       />
       <Tabs.Screen
@@ -94,7 +93,7 @@ export default function TabLayout() {
             />
           ),
 
-          headerLeft: () => <Text> Profile Header </Text>,
+          headerLeft: () => <Text> Profile Header </Text>
         }}
       />
       <Tabs.Screen
@@ -107,7 +106,7 @@ export default function TabLayout() {
               size={24}
               color={color}
             />
-          ),
+          )
         }}
       />
     </Tabs>

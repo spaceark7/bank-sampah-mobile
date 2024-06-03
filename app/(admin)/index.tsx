@@ -57,42 +57,48 @@ export default function HomeScreen() {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: theme.colors.background,
-      }}
-    >
+        backgroundColor: theme.colors.background
+      }}>
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
+        }>
         <View
           style={{
-            flex: 1,
-          }}
-        >
+            flex: 1
+          }}>
           <View
             style={{
-              minHeight: 150,
-            }}
-          >
+              minHeight: 150
+            }}>
             <CardList
               data={dashboardData?.widgets}
               state={{
                 isLoading: isDashboardLoading,
                 isSuccess: isDashboardSuccess,
-                isFetching: isDashboardFetching,
+                isFetching: isDashboardFetching
               }}
             />
             <Divider
               style={{
-                marginVertical: 20,
+                marginVertical: 20
               }}
             />
             <View style={styles.container}>
-              <Button style={styles.button} onPress={() => {}}>
+              <Button
+                outlined
+                containerStyle={{
+                  width: '48%'
+                }}
+                onPress={() => {}}>
                 Penyetoran
               </Button>
-              <Button style={styles.button} onPress={() => {}}>
+              <Button
+                text
+                containerStyle={{
+                  width: '48%'
+                }}
+                onPress={() => {}}>
                 Penarikan
               </Button>
             </View>

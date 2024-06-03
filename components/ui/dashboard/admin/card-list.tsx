@@ -26,14 +26,7 @@ const CardList = ({ data: adminDashboard, state }: CardListProps) => {
             title={item.title}
             value={item.value}
             icon={
-              <Icon
-                type={'material-community'}
-                name={item.icon}
-                style={{
-                  width: 16,
-                  height: 16,
-                }}
-              />
+              <Icon type={'material-community'} name={item.icon} size={16} />
             }
           />
         ))}

@@ -38,7 +38,7 @@ export function Text(props: TextProps) {
 
   return (
     <DefaultText
-      style={[{ color: theme.colors.primaryTextColor }, style]}
+      style={[{ color: theme.colors.textColor }, style]}
       {...otherProps}
     />
   )

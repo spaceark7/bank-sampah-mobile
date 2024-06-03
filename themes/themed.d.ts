@@ -1,3 +1,4 @@
+import { TextInputProps } from 'react-native'
 // themed.d.ts
 import '@rneui/themed'
 
@@ -19,6 +20,7 @@ declare module '@rneui/themed' {
     bluegray: string
     purple: string
     red: string
+    textColor: string
     primaryLight: string
     primaryTextColor: string
     successTextColor: string
@@ -40,6 +42,22 @@ declare module '@rneui/themed' {
     shade700: string
     shade800: string
     shade900: string
+  }
+
+  export interface TextProps {
+    variants?:
+      | 'h1'
+      | 'h2'
+      | 'h3'
+      | 'h4'
+      | 'h5'
+      | 'h6'
+      | 'subtitle1'
+      | 'subtitle2'
+      | 'body1'
+      | 'body2'
+      | 'caption'
+      | 'overline'
   }
 
   export interface InputProps {

@@ -17,25 +17,32 @@ const CardItem = ({
     <View
       style={{
         flexBasis: '50%',
-        padding: 2,
-      }}
-    >
+        padding: 2
+      }}>
       <Card
         containerStyle={{
           ...styles.card,
-          backgroundColor: theme.colors.background,
-        }}
-      >
+          backgroundColor: theme.colors.background
+        }}>
         <View
           style={{
             ...styles.row,
-            marginBottom: 4,
-          }}
-        >
-          <Text>{title}</Text>
+            marginBottom: 4
+          }}>
+          <Text
+            style={{
+              fontSize: 14
+            }}>
+            {title}
+          </Text>
           {icon}
         </View>
-        <Text>{value}</Text>
+        <Text
+          style={{
+            fontSize: 32
+          }}>
+          {value}
+        </Text>
       </Card>
     </View>
   )
