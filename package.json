@@ -18,9 +18,7 @@
     "@alanantar_sb/react-native-skeleton-content": "^1.0.31",
     "@eva-design/eva": "^2.2.0",
     "@expo/vector-icons": "^14.0.2",
-    "@gluestack-style/react": "^1.0.56",
-    "@gluestack-ui/config": "^1.1.18",
-    "@gluestack-ui/themed": "^1.1.26",
+
     "@hookform/resolvers": "^3.3.4",
     "@react-native-community/blur": "^4.4.0",
     "@react-native-community/datetimepicker": "8.0.1",
@@ -32,8 +30,7 @@
     "@rneui/themed": "^4.0.0-rc.8",
     "@shopify/flash-list": "^1.6.0",
     "@types/redux-logger": "^3.0.13",
-    "@ui-kitten/components": "^5.3.1",
-    "@ui-kitten/eva-icons": "^5.3.1",
+  
     "expo": "^51.0.9",
     "expo-asset": "^10.0.6",
     "expo-av": "^14.0.5",
