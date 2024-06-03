@@ -84,19 +84,30 @@ export default function HomeScreen() {
                 marginVertical: 20
               }}
             />
-            <View style={styles.container}>
+            <View
+              style={{
+                ...styles.container,
+                alignItems: 'center'
+              }}>
               <Button
                 outlined
                 containerStyle={{
                   width: '48%'
                 }}
-                onPress={() => {}}>
+                onPress={() => {}}
+                icon={{
+                  type: 'material-community',
+                  name: 'upload'
+                }}>
                 Penyetoran
               </Button>
               <Button
-                text
                 containerStyle={{
                   width: '48%'
+                }}
+                icon={{
+                  type: 'material-community',
+                  name: 'download'
                 }}
                 onPress={() => {}}>
                 Penarikan
@@ -163,7 +174,6 @@ export default function HomeScreen() {
               ))}
           </SkeletonContent>
         </View> */}
-        <Divider />
 
         {/* <View
           style={{

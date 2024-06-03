@@ -176,6 +176,12 @@ export const rnuiTheme = createTheme({
           justifyContent: 'center',
           alignItems: 'center'
         },
+        icon: {
+          color:
+            props.outlined || props.text
+              ? theme.colors.primary
+              : theme.colors.primaryTextColor
+        },
         containerStyle: {
           padding: 10,
           borderRadius: props.rounded ? 30 : 6
