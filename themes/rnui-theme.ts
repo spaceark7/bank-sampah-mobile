@@ -24,7 +24,12 @@ const base_colors = {
     infoMessageBg: 'rgba(219, 234, 254, 0.7)',
     successMessageBg: 'rgba(228, 248, 240, 0.7)',
     dangerMessageBg: 'rgba(255, 231, 230, 0.7)',
-    warningMessageBg: 'rgba(255, 242, 226, 0.7)'
+    warningMessageBg: 'rgba(255, 242, 226, 0.7)',
+    textSecondaryColor: '#6b7280',
+    borderRadius: 6,
+    divider: '#e5e7eb',
+    maskBg: 'rgba(0, 0, 0, 0.4)',
+    errorColor: '#e24c4c'
   },
   dark: {
     blue: '#106ebe',
@@ -49,7 +54,12 @@ const base_colors = {
     infoMessageBg: 'rgba(59, 130, 246, 0.2)',
     successMessageBg: 'rgba(16, 185, 129, 0.2)',
     dangerMessageBg: 'rgba(239, 68, 68, 0.2)',
-    warningMessageBg: 'rgba(234, 179, 8, 0.2)'
+    warningMessageBg: 'rgba(234, 179, 8, 0.2)',
+    textSecondaryColor: 'rgba(255, 255, 255, 0.6)',
+    borderRadius: 6,
+    divider: '#424b57',
+    maskBg: 'rgba(0, 0, 0, 0.4)',
+    errorColor: '#fca5a5'
   }
 }
 

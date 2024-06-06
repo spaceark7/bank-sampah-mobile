@@ -42,6 +42,12 @@ declare module '@rneui/themed' {
     shade700: string
     shade800: string
     shade900: string
+    // * Global
+    textSecondaryColor: string
+    borderRadius: number
+    divider: string
+    maskBg: string
+    errorColor: string
   }
 
   export interface TextProps {
