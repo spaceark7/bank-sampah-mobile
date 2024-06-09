@@ -1,7 +1,8 @@
-import { View, StyleSheet } from 'react-native'
-import React, { ComponentType, ReactNode } from 'react'
-import { Divider, Text, useTheme } from '@ui-kitten/components'
+import { StyleSheet } from 'react-native'
+import React, { ReactNode } from 'react'
 import { DateFormatter } from '@/utils/types'
+import { useTheme } from '@rneui/themed'
+import { Text, View } from '@/components/Themed'
 
 type DetailItemProps = {
   label: string
@@ -19,7 +20,7 @@ const DetailItem: React.FC<DetailItemProps> = ({
   render: CustomComponent,
   ...rest
 }) => {
-  const theme = useTheme()
+  const { theme } = useTheme()
   return (
     <View
       style={{
@@ -30,20 +31,33 @@ const DetailItem: React.FC<DetailItemProps> = ({
     >
       <View
         style={{
-          backgroundColor: theme['background-basic-color-1'],
           borderRadius: 10,
           paddingHorizontal: 10,
           borderBottomWidth: type !== 'separator' ? 1 : 0,
-          borderBottomColor: theme['color-basic-400'],
           flex: 1,
+          borderColor:
+            theme.mode === 'dark'
+              ? theme.colors.shade700
+              : theme.colors?.shade300,
         }}
       >
         {type === 'separator' ? (
-          <Text appearance='hint' category='h6'>
+          <Text
+            style={{
+              color: theme.colors?.shade400,
+            }}
+          >
             {label}
           </Text>
         ) : (
-          <Text appearance='hint' category='label'>
+          <Text
+            style={{
+              color:
+                theme.mode === 'dark'
+                  ? theme.colors?.shade400
+                  : theme.colors?.shade500,
+            }}
+          >
             {label}
           </Text>
         )}
@@ -52,7 +66,6 @@ const DetailItem: React.FC<DetailItemProps> = ({
           CustomComponent(content)
         ) : (
           <Text
-            category='p1'
             style={{
               paddingVertical: 10,
             }}

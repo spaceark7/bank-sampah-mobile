@@ -6,12 +6,12 @@ import { UserEntity } from '@/services/users/user-entity'
 import { useGetUserDetailQuery } from '@/services/users/user-slices'
 import { useState } from 'react'
 import { useRouter } from 'expo-router'
-import { Divider } from '@rneui/themed'
-
+import { Avatar, Button, Divider, useTheme } from '@rneui/themed'
 
 export default function ProfileScreen() {
   const [visible, setVisible] = useState<boolean>(false)
   const router = useRouter()
+  const { theme } = useTheme()
   const {
     data: userDetail,
     error,
@@ -157,36 +157,36 @@ export default function ProfileScreen() {
     <SafeAreaView
       style={{
         flex: 1,
+        backgroundColor:
+          theme.mode === 'dark' ? theme.colors.shade900 : theme.colors.shade000,
       }}
     >
       <ScrollView>
-        {/* <LayoutContainer level='2'>
-          <View
-            style={{
-              minHeight: 150,
-              backgroundColor: 'rgba(0,0,0,0)',
+        <View
+          style={{
+            minHeight: 200,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor:
+              theme.mode === 'dark'
+                ? theme.colors.shade800
+                : theme.colors.shade200,
+          }}
+        >
+          <Avatar
+            size={100}
+            rounded
+            title='A'
+            containerStyle={{
+              backgroundColor: theme.colors.primary,
             }}
-          >
-            <View
-              style={{
-                backgroundColor: 'rgba(0,0,0,0)',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Avatar
-                size='lg'
-                style={{
-                  height: 120,
-                  width: 120,
-                }}
-              >
-                <AvatarImage source={require('@/assets/images/avatar.png')} />
-              </Avatar>
-            </View>
-          </View>
-        </LayoutContainer>
-        <LayoutContainer flex={1}>
+          />
+        </View>
+        <View
+          style={{
+            flex: 1,
+          }}
+        >
           {isSuccess && (
             <>
               <DetailSection<
@@ -213,11 +213,11 @@ export default function ProfileScreen() {
               marginTop: 20,
             }}
           >
-            <Button variant='outline' action='negative'>
+            <Button outlined color={'error'}>
               Hapus Akun
             </Button>
           </View>
-        </LayoutContainer> */}
+        </View>
       </ScrollView>
     </SafeAreaView>
   )

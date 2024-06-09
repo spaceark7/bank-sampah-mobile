@@ -5,6 +5,7 @@ import { useGetAdminDashboardQuery } from '@/services/dashboard/dashboard-slices
 // import SkeletonContent from '@alanantar_sb/react-native-skeleton-content'
 import { Icon } from '@rneui/themed'
 import { View } from '@/components/Themed'
+import ContentLoader from '../../content-loader/ContentLoader'
 
 interface CardListProps {
   data: any
@@ -18,19 +19,28 @@ interface CardListProps {
 
 const CardList = ({ data: adminDashboard, state }: CardListProps) => {
   return (
-    <View style={styles.container}>
-      {state.isSuccess &&
-        adminDashboard.map((item: any) => (
-          <CardItem
-            key={item.title}
-            title={item.title}
-            value={item.value}
-            icon={
-              <Icon type={'material-community'} name={item.icon} size={16} />
-            }
-          />
-        ))}
-    </View>
+    <ContentLoader
+      isLoading={state.isLoading || state.isFetching || false}
+      type='card'
+      length={4}
+      height={120}
+      row
+    >
+      <View style={styles.container}>
+        {state.isSuccess &&
+          !state.isFetching &&
+          adminDashboard.map((item: any) => (
+            <CardItem
+              key={item.title}
+              title={item.title}
+              value={item.value}
+              icon={
+                <Icon type={'material-community'} name={item.icon} size={16} />
+              }
+            />
+          ))}
+      </View>
+    </ContentLoader>
   )
 }
 

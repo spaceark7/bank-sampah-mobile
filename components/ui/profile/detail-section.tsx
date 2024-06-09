@@ -1,10 +1,11 @@
 import { View, StyleSheet } from 'react-native'
 import React from 'react'
-import { Button, Divider, Text } from '@ui-kitten/components'
 import IconDisplay from '../icon-display'
 import DetailItem from './detail-item'
 import DetailList from './detail-list'
 import { getValueFromPath } from '@/utils/types'
+import { Text } from '@/components/Themed'
+import { Button, Divider, useTheme } from '@rneui/themed'
 const PenIcon = (props: any) => <IconDisplay name='edit-outline' {...props} />
 
 type DetailSectionProps<T> = {
@@ -24,6 +25,7 @@ const DetailSection = <T,>({
 }: DetailSectionProps<T>) => {
   console.log('data', data)
   console.log(field)
+  const { theme } = useTheme()
   return isLoading ? null : (
     <View style={styles.container}>
       <View
@@ -34,12 +36,20 @@ const DetailSection = <T,>({
           alignItems: 'center',
         }}
       >
-        <Text category='h6'>{title}</Text>
+        <Text>{title}</Text>
         <Button
           style={styles.iconButton}
-          accessoryLeft={PenIcon}
-          appearance='ghost'
-          size='large'
+          icon={{
+            type: 'material-community',
+            name: 'pencil',
+            color: theme.colors?.shade500,
+          }}
+          text
+          size='lg'
+          containerStyle={{
+            borderRadius: 50,
+          }}
+          rounded
           onPress={() => {
             action && action()
           }}
@@ -64,7 +74,7 @@ const DetailSection = <T,>({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(0,0,0,0)',
+    padding: 8,
   },
   iconButton: {
     borderRadius: 50,

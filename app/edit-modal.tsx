@@ -1,9 +1,8 @@
-import { View, Text } from 'react-native'
 import React from 'react'
 import { Stack, router, useLocalSearchParams } from 'expo-router'
 import RenderScreen from '@/layouts/render-screen'
-import { Button, useTheme } from '@gluestack-ui/themed'
-import { ButtonText } from '@gluestack-ui/themed'
+import { Button, useTheme } from '@rneui/themed'
+import { View } from '@/components/Themed'
 const HeaderBack = ({
   color,
   onPress,
@@ -12,14 +11,8 @@ const HeaderBack = ({
   onPress: () => void
 }) => {
   return (
-    <Button
-      size='md'
-      variant='solid'
-      action='primary'
-      isDisabled={false}
-      isFocusVisible={false}
-    >
-      <ButtonText>Add </ButtonText>
+    <Button size='md' color='primary'>
+      Add
     </Button>
   )
 }
@@ -27,16 +20,29 @@ const HeaderBack = ({
 const EditModal = () => {
   const params = useLocalSearchParams()
   const isPresented = router.canGoBack()
-  const theme = useTheme()
+  const { theme } = useTheme()
 
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
       <Stack.Screen
         options={{
           headerTitleAlign: 'center',
+          headerTitleStyle: {
+            color: theme.colors.textColor,
+          },
 
           presentation: 'modal',
           title: `Edit ${params.name as string}`,
+          headerStyle: {
+            backgroundColor:
+              theme.mode === 'dark'
+                ? theme.colors.shade800
+                : theme.colors.shade100,
+          },
         }}
       />
       <RenderScreen segment={params.segment as string} />

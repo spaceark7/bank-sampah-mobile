@@ -1,11 +1,8 @@
 import React from 'react'
-import {
-  Datepicker,
-  DatepickerProps,
-  Icon,
-  IconElement,
-  Input,
-} from '@ui-kitten/components'
+import DateTimePicker, {
+  BaseProps,
+  DateTimePickerAndroid,
+} from '@react-native-community/datetimepicker'
 
 import {
   ControllerFieldState,
@@ -13,10 +10,11 @@ import {
   FieldErrors,
   FieldValues,
 } from 'react-hook-form'
-import { View } from 'react-native'
 import getFormErrorMessage from '@/components/ErrorTextMessage'
+import { View } from '@/components/Themed'
+import { Input } from '@rneui/themed'
 
-interface BaseInputDateProps extends DatepickerProps {
+interface BaseInputDateProps extends BaseProps {
   field: ControllerRenderProps<FieldValues, any>
   fieldState: ControllerFieldState
   inputField: any
@@ -42,24 +40,12 @@ const BaseInputDate = ({
             }
       }
     >
-      <Datepicker
-        label={inputField.label}
-        id={field.name}
-        status={
-          fieldState.invalid
-            ? 'danger'
-            : fieldState.isTouched
-            ? 'success'
-            : 'basic'
-        }
-        min={new Date(1900, 0, 0)}
-        max={new Date()}
-        date={new Date(field.value)}
-        onSelect={(data) => {
-          field.onChange(data.toISOString())
-        }}
-        accessoryRight={CalendarIcon}
-        caption={getFormErrorMessage(field.name, errors)}
+      {/* <DateTimePicker
+        // label={inputField.label}
+        testID={field.name}
+        // min={new Date(1900, 0, 0)}
+        // max={new Date()}
+        value={new Date(field.value)}
         {...inputField.attr}
         // className={classNames(
         //   {
@@ -67,13 +53,29 @@ const BaseInputDate = ({
         //   },
         //   inputField.inputClassName || 'w-full'
         // )}
-      />
+      /> */}
+      <Input
+        id={field.name}
+        label={inputField.label}
+        invalid={fieldState.invalid}
+        value={field.value.toString()}
+        rightIcon={{
+          type: 'material-community',
+          name: 'calendar',
+          onPress: () => {
+            DateTimePickerAndroid.open({
+              value: !field.value ? new Date() : new Date(field.value),
+              onChange: (event, selectedDate) => field.onChange(selectedDate),
+              mode: 'date',
+            })
+          },
+        }}
+        onChangeText={(data: any) => field.onChange(data)}
+        errorMessage={getFormErrorMessage(field.name, errors)}
+        {...inputField.attr}
+      ></Input>
     </View>
   )
 }
-
-const CalendarIcon = (props: any): IconElement => (
-  <Icon {...props} name='calendar' />
-)
 
 export default BaseInputDate

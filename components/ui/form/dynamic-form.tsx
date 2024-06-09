@@ -76,7 +76,7 @@ const DynamicForm: React.FC<DynamicFormProps> = (props) => {
       dispatch(
         setFormState({
           status: 'error',
-          message: messages,
+          message: messages.join('\n'),
         })
       )
       props.onReject(error)
@@ -194,6 +194,7 @@ const RenderField = ({
               field={field}
               fieldState={fieldState}
               errors={errors}
+              value={field.value}
               inputField={inputField}
             />
           )}

@@ -1,4 +1,5 @@
-import { createTheme } from '@rneui/themed'
+import { StringOmit } from '@rneui/base'
+import { Colors, createTheme } from '@rneui/themed'
 
 const base_colors = {
   light: {
@@ -26,10 +27,9 @@ const base_colors = {
     dangerMessageBg: 'rgba(255, 231, 230, 0.7)',
     warningMessageBg: 'rgba(255, 242, 226, 0.7)',
     textSecondaryColor: '#6b7280',
-    borderRadius: 6,
     divider: '#e5e7eb',
     maskBg: 'rgba(0, 0, 0, 0.4)',
-    errorColor: '#e24c4c'
+    errorColor: '#e24c4c',
   },
   dark: {
     blue: '#106ebe',
@@ -56,11 +56,10 @@ const base_colors = {
     dangerMessageBg: 'rgba(239, 68, 68, 0.2)',
     warningMessageBg: 'rgba(234, 179, 8, 0.2)',
     textSecondaryColor: 'rgba(255, 255, 255, 0.6)',
-    borderRadius: 6,
     divider: '#424b57',
     maskBg: 'rgba(0, 0, 0, 0.4)',
-    errorColor: '#fca5a5'
-  }
+    errorColor: '#fca5a5',
+  },
 }
 
 const shades_colors = {
@@ -74,7 +73,7 @@ const shades_colors = {
     shade600: '#6b7280', //text secondary color
     shade700: '#4b5563', //text color
     shade800: '#374151', //unused
-    shade900: '#1f2937' //unused
+    shade900: '#1f2937', //unused
   },
   dark: {
     shade000: ' rgba(255, 255, 255, 0.87)', //surface
@@ -86,7 +85,36 @@ const shades_colors = {
     shade600: '#424b57', //text secondary color
     shade700: '#374151', //text color
     shade800: '#1f2937', //unused
-    shade900: '#111827' //unused
+    shade900: '#111827', //unused
+  },
+}
+
+type ButtonColorProps = {
+  color:
+    | StringOmit<'primary' | 'secondary' | 'success' | 'warning' | 'error'>
+    | undefined
+  theme: Colors
+}
+
+const generateColor = ({ color, theme }: ButtonColorProps) => {
+  switch (color) {
+    case 'primary':
+      return theme.primary
+
+    case 'secondary':
+      return theme.bluegray
+
+    case 'success':
+      return theme.green
+    case 'error':
+      return theme.red
+
+    case 'warning':
+      return theme.yellow
+    case 'info':
+      return theme.blue
+    default:
+      return theme.primary
   }
 }
 
@@ -97,7 +125,7 @@ export const rnuiTheme = createTheme({
     primary: '#10b981',
     primaryLight: '#a7f3d0',
     textColor: shades_colors.light.shade700,
-    background: '#f9fafb'
+    background: '#f9fafb',
   },
   darkColors: {
     ...base_colors.dark,
@@ -107,13 +135,17 @@ export const rnuiTheme = createTheme({
     primaryTextColor: '#030712',
     textColor: shades_colors.light.shade000,
 
-    background: '#111827'
+    background: '#111827',
+  },
+  global: {
+    borderRadius: 6,
+    containerPadding: 16,
   },
   components: {
     Input: (props, theme) => {
       return {
         containerStyle: {
-          paddingHorizontal: 0
+          paddingHorizontal: 0,
         },
         inputContainerStyle: {
           borderBottomWidth: props.variant === 'outlined' ? 1 : 0,
@@ -128,18 +160,24 @@ export const rnuiTheme = createTheme({
               ? theme.mode === 'dark'
                 ? theme.colors.shade800
                 : theme.colors.shade000
-              : 'rgba(0,0,0,0)'
+              : 'rgba(0,0,0,0)',
+        },
+        rightIcon: {
+          color:
+            theme.mode === 'dark'
+              ? theme.colors.shade100
+              : theme.colors.shade700,
         },
         rightIconContainerStyle: {
-          marginEnd: 6
+          marginEnd: 6,
         },
         leftIconContainerStyle: {
-          marginStart: 6
+          marginStart: 6,
         },
         labelStyle: {
           fontSize: 12,
           fontWeight: '500',
-          marginBottom: 4
+          marginBottom: 4,
         },
         style: {
           borderRadius: 6,
@@ -161,44 +199,50 @@ export const rnuiTheme = createTheme({
           placeholderTextColor:
             theme.mode === 'dark'
               ? theme.colors.shade100
-              : theme.colors.shade600
-        }
+              : theme.colors.shade600,
+        },
       }
     },
 
     Button: (props, theme) => {
+      let styleColor = generateColor({
+        color: props.color,
+        theme: theme.colors,
+      })
+
       return {
         type: props.outlined ? 'outline' : props.text ? 'clear' : 'solid',
         titleStyle: {
           color:
             props.outlined || props.text
-              ? theme.colors.primary
+              ? styleColor
               : theme.colors.primaryTextColor,
-          fontSize: 16,
-          fontFamily: 'Inter-Medium'
+          fontFamily: 'Inter-Medium',
+          fontSize: props.size === 'sm' ? 12 : props.size === 'lg' ? 20 : 16,
+          fontWeight: '600',
         },
         style: {
-          borderColor: props.outlined ? theme.colors.primary : ' rgba(0,0,0,0)',
-          borderWidth: props.outlined ? 1 : 0,
-
           paddingVertical: 12,
           paddingHorizontal: 16,
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
         },
         icon: {
           color:
             props.outlined || props.text
               ? theme.colors.primary
-              : theme.colors.primaryTextColor
+              : theme.colors.primaryTextColor,
         },
         containerStyle: {
           padding: 10,
-          borderRadius: props.rounded ? 30 : 6
+          borderRadius: props.rounded ? 30 : 6,
         },
         buttonStyle: {
-          borderRadius: props.rounded ? 30 : 6
-        }
+          borderRadius: props.rounded ? 30 : 6,
+          backgroundColor:
+            props.outlined || props.text ? 'rgba(0,0,0,0)' : styleColor,
+          borderColor: props.outlined ? styleColor : 'rgba(0,0,0,0)',
+        },
       }
     },
     Icon: (props, theme) => {
@@ -208,17 +252,54 @@ export const rnuiTheme = createTheme({
             color:
               theme.mode === 'dark'
                 ? theme.colors.shade600
-                : theme.colors.shade400
-          }
-        }
+                : theme.colors.shade400,
+          },
+        },
       }
     },
     Divider: (props, theme) => {
       return {
         color:
-          theme.mode === 'dark' ? theme.colors.shade600 : theme.colors.shade300
+          theme.mode === 'dark' ? theme.colors.shade600 : theme.colors.shade300,
       }
-    }
+    },
+    ListItem: (props, theme) => {
+      return {
+        containerStyle: {
+          padding: 10,
+          backgroundColor:
+            theme.mode === 'dark'
+              ? theme.colors.shade800
+              : theme.colors.shade100,
+          borderWidth: 1,
+          borderRadius: theme.global.borderRadius,
+        },
+      }
+    },
+    ListItemTitle: (props, theme) => {
+      return {
+        style: {
+          fontWeight: 'semibold',
+        },
+      }
+    },
+    ListItemSubtitle: (props, theme) => {
+      return {
+        style: {
+          color:
+            theme.mode === 'dark'
+              ? theme.colors.shade400
+              : theme.colors.shade600,
+        },
+      }
+    },
+    Skeleton: (props, theme) => {
+      return {
+        skeletonStyle: {
+          borderRadius: theme.global.borderRadius,
+        },
+      }
+    },
     // Text: (props, theme) => {
     //   switch (props.variants) {
     //     case 'h1':
@@ -342,5 +423,5 @@ export const rnuiTheme = createTheme({
     //   }
     // }
   },
-  mode: 'light'
+  mode: 'light',
 })

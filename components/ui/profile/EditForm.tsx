@@ -1,17 +1,15 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
 import React from 'react'
 import DynamicForm from '../form/dynamic-form'
 import { UpdateUserSchema } from '@/utils/schemas/user-schema'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { formState, setFormState } from '@/store/slices/config-slices'
-import LayoutContainer from '../layout- container'
-import {
-  useGetUserDetailQuery,
-} from '@/services/users/user-slices'
+import { useGetUserDetailQuery } from '@/services/users/user-slices'
 import { Redirect, router } from 'expo-router'
 import { InferType } from 'yup'
 import useToast from '@/hooks/global-toast/useToast'
 import { useUpdateMemberMutation } from '@/services/members/member-slices'
+import { Text, View } from '@/components/Themed'
 
 const EditForm = () => {
   const formStateRef = useAppSelector(formState)
@@ -47,7 +45,7 @@ const EditForm = () => {
     {
       name: 'phone_number',
       type: 'text',
-      label: 'Phone Number',
+      label: 'No. Telepon',
       attr: {
         disabled: true,
       },
@@ -86,7 +84,7 @@ const EditForm = () => {
   }
   return (
     <ScrollView>
-      <LayoutContainer level='1'>
+      <View style={styles.container}>
         {isError && <Redirect href='/(user)/profile' />}
         {isLoading && <Text>Loading...</Text>}
         {isSuccess && (
@@ -104,7 +102,7 @@ const EditForm = () => {
             }}
           />
         )}
-      </LayoutContainer>
+      </View>
     </ScrollView>
   )
 }
@@ -112,5 +110,7 @@ const EditForm = () => {
 export default EditForm
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    padding: 20,
+  },
 })

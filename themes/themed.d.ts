@@ -1,6 +1,7 @@
 import { TextInputProps } from 'react-native'
 // themed.d.ts
 import '@rneui/themed'
+import { StringOmit } from '@rneui/base'
 
 declare module '@rneui/themed' {
   export interface Colors {
@@ -49,6 +50,12 @@ declare module '@rneui/themed' {
     maskBg: string
     errorColor: string
   }
+  export interface Theme {
+    global: {
+      borderRadius: number
+      containerPadding: number
+    }
+  }
 
   export interface TextProps {
     variants?:
@@ -77,6 +84,11 @@ declare module '@rneui/themed' {
     outlined?: boolean
     text?: boolean
     rounded?: boolean
+    color?:
+      | StringOmit<
+          'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info'
+        >
+      | undefined
   }
 
   export interface ComponentTheme {

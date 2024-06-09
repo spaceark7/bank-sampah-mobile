@@ -1,8 +1,8 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import { ListItem, useTheme } from '@ui-kitten/components'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { CurrencyFormatter } from '@/utils/types'
+import { Icon, ListItem, useTheme } from '@rneui/themed'
 type TransactionItemProps = {
   title: string
   description: string
@@ -45,37 +45,21 @@ const TransactionItem: React.FC<TransactionItemProps> = ({
   type,
   amount,
 }) => {
-  const theme = useTheme()
+  const { theme } = useTheme()
   return (
-    <ListItem
-      title={title}
-      description={description}
-      accessoryLeft={(data) =>
-        type === 'Redeem' ? (
-          <RedeemIcon
-            fill={theme['color-success-600']}
-            color={theme['color-success-100']}
-            {...data}
-          />
-        ) : (
-          <WithdrawIcon
-            fill={theme['color-info-600']}
-            color={theme['color-info-transparent-100']}
-            {...data}
-          />
-        )
-      }
-      accessoryRight={() => (
-        <Text
-          style={{
-            fontSize: 18,
-            fontWeight: 'bold',
-          }}
-        >
-          {CurrencyFormatter(amount)}
-        </Text>
-      )}
-    />
+    <ListItem>
+      <Icon
+        name='attach-money'
+        color={type === 'Redeem' ? theme.colors.success : theme.colors.info}
+      />
+      <ListItem.Content>
+        <ListItem.Title>{title}</ListItem.Title>
+        <ListItem.Subtitle>{description}</ListItem.Subtitle>
+      </ListItem.Content>
+      <ListItem.Content right>
+        <ListItem.Subtitle>{CurrencyFormatter(amount)}</ListItem.Subtitle>
+      </ListItem.Content>
+    </ListItem>
   )
 }
 

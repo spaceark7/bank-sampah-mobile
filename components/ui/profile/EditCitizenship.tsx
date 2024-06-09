@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
 import React from 'react'
 import DynamicForm from '../form/dynamic-form'
 import {
@@ -7,14 +7,12 @@ import {
 } from '@/utils/schemas/user-schema'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { formState, setFormState } from '@/store/slices/config-slices'
-import LayoutContainer from '../layout- container'
-import {
-  useGetUserDetailQuery,
-} from '@/services/users/user-slices'
+import { useGetUserDetailQuery } from '@/services/users/user-slices'
 import { Redirect, router } from 'expo-router'
 import { InferType } from 'yup'
 import useToast from '@/hooks/global-toast/useToast'
 import { useUpdateMemberIdentityMutation } from '@/services/members/member-slices'
+import { Text, View } from '@/components/Themed'
 
 const EditCitizenshipForm = () => {
   const formStateRef = useAppSelector(formState)
@@ -32,7 +30,7 @@ const EditCitizenshipForm = () => {
       type: 'text',
       defaultValue: user?.user_detail.citizenship?.nik_number,
       attr: {
-        disabled: true,
+        disabled: false,
         keyboardType: 'number-pad',
       },
     },
@@ -42,24 +40,24 @@ const EditCitizenshipForm = () => {
       label: 'No. KK',
       defaultValue: user?.user_detail.citizenship?.family_id_number,
       attr: {
-        disabled: true,
+        disabled: false,
         keyboardType: 'number-pad',
       },
     },
-    {
-      name: 'gender',
-      type: 'select',
-      label: 'Jenis Kelamin',
-      defaultValue: user?.user_detail.citizenship?.gender,
+    // {
+    //   name: 'gender',
+    //   type: 'select',
+    //   label: 'Jenis Kelamin',
+    //   defaultValue: user?.user_detail.citizenship?.gender,
 
-      options: [
-        { label: 'Laki-laki', value: 'Male' },
-        {
-          label: 'Perempuan',
-          value: 'Female',
-        },
-      ],
-    },
+    //   options: [
+    //     { label: 'Laki-laki', value: 'Male' },
+    //     {
+    //       label: 'Perempuan',
+    //       value: 'Female',
+    //     },
+    //   ],
+    // },
     {
       name: 'birth_place',
       type: 'text',
@@ -73,17 +71,17 @@ const EditCitizenshipForm = () => {
       defaultValue: user?.user_detail.citizenship?.birth_date,
     },
 
-    {
-      name: 'marital_status',
-      type: 'select',
-      label: 'Status Pernikahan',
-      defaultValue: user?.user_detail.citizenship?.marital_status,
-      options: [
-        { label: 'Lajang', value: 'Single' },
-        { label: 'Menikah', value: 'Married' },
-        { label: 'Cerai', value: 'Divorced' },
-      ],
-    },
+    // {
+    //   name: 'marital_status',
+    //   type: 'select',
+    //   label: 'Status Pernikahan',
+    //   defaultValue: user?.user_detail.citizenship?.marital_status,
+    //   options: [
+    //     { label: 'Lajang', value: 'Single' },
+    //     { label: 'Menikah', value: 'Married' },
+    //     { label: 'Cerai', value: 'Divorced' },
+    //   ],
+    // },
 
     {
       type: 'separator',
@@ -128,7 +126,7 @@ const EditCitizenshipForm = () => {
   ]
 
   const fnSubmit = async (data: InferType<typeof UserCitizenSchema>) => {
-    console.log('fnSubmit', data.birth_date.toISOString())
+    console.log('fnSubmit', data)
     try {
       const result = await updateMember({
         ...data,
@@ -153,7 +151,12 @@ const EditCitizenshipForm = () => {
   }
   return (
     <ScrollView>
-      <LayoutContainer level='1'>
+      <View
+        style={{
+          flex: 1,
+          padding: 10,
+        }}
+      >
         {isError && <Redirect href='/(user)/profile' />}
         {isLoading && <Text>Loading...</Text>}
         {isSuccess && (
@@ -172,7 +175,7 @@ const EditCitizenshipForm = () => {
             showToastError
           />
         )}
-      </LayoutContainer>
+      </View>
     </ScrollView>
   )
 }
