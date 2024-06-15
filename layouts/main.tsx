@@ -88,7 +88,14 @@ const MainLayout = () => {
         <ThemeProvider
           value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
         >
-          <SafeAreaProvider>
+          <SafeAreaProvider
+            style={{
+              backgroundColor:
+                colorScheme === 'dark'
+                  ? rnuiTheme.darkColors?.background
+                  : rnuiTheme.lightColors?.background,
+            }}
+          >
             <RootSiblingParent>
               <StackRouter />
             </RootSiblingParent>
