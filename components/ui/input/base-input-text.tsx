@@ -37,9 +37,11 @@ const BaseInputText = ({
       }
     >
       <Input
+        variant='outlined'
         id={field.name}
         label={inputField.label}
         invalid={fieldState.invalid}
+        placeholder={inputField.placeholder ?? `Masukan ${inputField.label}`}
         value={field.value}
         onChangeText={(data: any) => field.onChange(data)}
         errorMessage={getFormErrorMessage(field.name, errors)}

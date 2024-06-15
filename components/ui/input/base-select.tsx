@@ -1,12 +1,4 @@
 import React from 'react'
-import {
-  IndexPath,
-  Input,
-  Select,
-  SelectItem,
-  SelectProps,
-  Text,
-} from '@ui-kitten/components'
 
 import {
   ControllerFieldState,
@@ -16,12 +8,24 @@ import {
 } from 'react-hook-form'
 import { View } from 'react-native'
 import getFormErrorMessage from '@/components/ErrorTextMessage'
+import { Dropdown } from 'react-native-element-dropdown'
+import { DropdownProps } from 'react-native-element-dropdown/lib/typescript/components/Dropdown/model'
+import { Text } from '@/components/Themed'
+import { useTheme } from '@rneui/themed'
 
-interface BaseSelectProps extends SelectProps {
+interface BaseSelectProps
+  extends Omit<
+    DropdownProps<any>,
+    'data' | 'onChange' | 'labelField' | 'valueField'
+  > {
   field: ControllerRenderProps<FieldValues, any>
   fieldState: ControllerFieldState
   inputField: any
   errors: FieldErrors<FieldValues>
+}
+
+const SelectItem = (item: any) => {
+  return <Text>{item.label}</Text>
 }
 
 const BaseSelect = ({
@@ -31,16 +35,7 @@ const BaseSelect = ({
   errors,
   ...rest
 }: BaseSelectProps) => {
-  const [selectedIndex, setSelectedIndex] = React.useState<
-    IndexPath | IndexPath[]
-  >(
-    new IndexPath(
-      inputField.options.findIndex(
-        (option: any) => option.value === field.value
-      )
-    )
-  )
-
+  const { theme } = useTheme()
   return (
     <View
       style={
@@ -53,8 +48,66 @@ const BaseSelect = ({
             }
       }
     >
-      <Select
-        label={inputField.label}
+      <Text
+        style={{
+          fontSize: 12,
+          marginBottom: 4,
+          fontWeight: '400',
+          color:
+            theme.mode === 'dark'
+              ? theme.colors.shade500
+              : theme.colors.shade500,
+        }}
+      >
+        {inputField.label}
+      </Text>
+      <Dropdown
+        containerStyle={{
+          borderColor:
+            theme.mode === 'dark'
+              ? theme.colors.shade900
+              : theme.colors.shade400,
+        }}
+        itemContainerStyle={{
+          backgroundColor:
+            theme.mode === 'dark'
+              ? theme.colors.shade800
+              : theme.colors.background,
+          padding: 6,
+          borderColor:
+            theme.mode === 'dark'
+              ? theme.colors.shade600
+              : theme.colors.shade400,
+        }}
+        itemTextStyle={{
+          color: theme.colors.textColor,
+        }}
+        selectedTextStyle={{
+          color:
+            theme.mode === 'dark'
+              ? theme.colors.shade100
+              : theme.colors.shade700,
+        }}
+        activeColor={
+          theme.mode === 'dark' ? theme.colors.shade700 : theme.colors.shade200
+        }
+        placeholderStyle={{
+          color:
+            theme.mode === 'dark'
+              ? theme.colors.shade500
+              : theme.colors.shade500,
+        }}
+        style={{
+          height: 50,
+          borderRadius: 6,
+          borderWidth: 1,
+          borderColor:
+            theme.mode === 'dark'
+              ? theme.colors.shade600
+              : theme.colors.shade400,
+          paddingHorizontal: 8,
+          backgroundColor: 'rgba(0,0,0,0)',
+        }}
         id={field.name}
         status={
           fieldState.invalid
@@ -63,19 +116,26 @@ const BaseSelect = ({
             ? 'success'
             : 'basic'
         }
-        value={inputField.options[(selectedIndex as IndexPath).row].label}
-        onSelect={(data) => {
+        maxHeight={300}
+        placeholder={inputField.placeholder ?? 'Pilih Item'}
+        onChange={(data: { label: string; value: string }) => {
           console.log('data', data)
-          setSelectedIndex(data)
-          field.onChange(inputField.options[(data as IndexPath).row].value)
+          field.onChange(data.value)
         }}
-        caption={getFormErrorMessage(field.name, errors)}
+        labelField='label'
+        valueField='value'
+        renderItem={SelectItem}
+        data={inputField.options}
         {...inputField.attr}
+      />
+      <Text
+        style={{
+          color: theme.colors.error,
+          fontSize: 11,
+        }}
       >
-        {inputField.options.map((option: any, index: number) => (
-          <SelectItem key={index} title={option.label} />
-        ))}
-      </Select>
+        {getFormErrorMessage(field.name, errors)}
+      </Text>
     </View>
   )
 }

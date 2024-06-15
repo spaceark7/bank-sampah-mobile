@@ -1,5 +1,5 @@
-import React from 'react'
-import DateTimePicker, {
+import React, { useCallback } from 'react'
+import {
   BaseProps,
   DateTimePickerAndroid,
 } from '@react-native-community/datetimepicker'
@@ -13,6 +13,7 @@ import {
 import getFormErrorMessage from '@/components/ErrorTextMessage'
 import { View } from '@/components/Themed'
 import { Input } from '@rneui/themed'
+import { DateFormatter } from '@/utils/types'
 
 interface BaseInputDateProps extends BaseProps {
   field: ControllerRenderProps<FieldValues, any>
@@ -28,6 +29,16 @@ const BaseInputDate = ({
   errors,
   ...rest
 }: BaseInputDateProps) => {
+  const dateDialog = useCallback(() => {
+    DateTimePickerAndroid.open({
+      value: !field.value
+        ? new Date(DateFormatter(new Date().toISOString()))
+        : new Date(field.value),
+      onChange: (event, selectedDate) => field.onChange(selectedDate),
+      mode: 'date',
+    })
+  }, [field.value])
+
   return (
     <View
       style={
@@ -56,21 +67,23 @@ const BaseInputDate = ({
       /> */}
       <Input
         id={field.name}
+        variant='outlined'
         label={inputField.label}
         invalid={fieldState.invalid}
-        value={field.value.toString()}
+        value={DateFormatter(field.value.toString())}
+        readOnly
         rightIcon={{
           type: 'material-community',
           name: 'calendar',
           onPress: () => {
             DateTimePickerAndroid.open({
               value: !field.value ? new Date() : new Date(field.value),
-              onChange: (event, selectedDate) => field.onChange(selectedDate),
+              onChange: (event, selectedDate) =>
+                event.type === 'set' && field.onChange(selectedDate),
               mode: 'date',
             })
           },
         }}
-        onChangeText={(data: any) => field.onChange(data)}
         errorMessage={getFormErrorMessage(field.name, errors)}
         {...inputField.attr}
       ></Input>

@@ -49,6 +49,7 @@ const BaseInputPassword = ({
         value={field.value}
         invalid={fieldState.invalid}
         onChangeText={(data) => field.onChange(data)}
+        placeholder={inputField.placeholder ?? `Masukan ${inputField.label}`}
         errorMessage={getFormErrorMessage(field.name, errors)}
         secureTextEntry={secureTextEntry}
         rightIcon={() => (

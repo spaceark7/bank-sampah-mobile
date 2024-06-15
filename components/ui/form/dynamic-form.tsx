@@ -271,9 +271,12 @@ const RenderField = ({
           name={inputField.name}
           control={control}
           render={({ field, fieldState }) => (
-            <View>
-              <Text>Comp</Text>
-            </View>
+            <BaseSelect
+              field={field}
+              fieldState={fieldState}
+              errors={errors}
+              inputField={inputField}
+            />
           )}
         />
       )
