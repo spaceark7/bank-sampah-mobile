@@ -94,5 +94,6 @@ declare module '@rneui/themed' {
   export interface ComponentTheme {
     Input: Partial<InputProps>
     Button: Partial<ButtonProps>
+    DialogButton: Partial<ButtonProps>
   }
 }

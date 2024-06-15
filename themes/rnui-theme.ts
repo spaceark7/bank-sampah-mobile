@@ -151,16 +151,18 @@ export const rnuiTheme = createTheme({
           borderBottomWidth: props.variant === 'outlined' ? 1 : 0,
           borderWidth: props.variant === 'outlined' ? 1 : 0,
           borderRadius: 6,
-          borderColor:
-            theme.mode === 'dark'
-              ? theme.colors.shade600
-              : theme.colors.shade400,
-          backgroundColor:
-            props.variant === 'filled' || !props.variant
-              ? theme.mode === 'dark'
-                ? theme.colors.shade800
-                : theme.colors.shade000
-              : 'rgba(0,0,0,0)',
+          borderColor: props.invalid
+            ? theme.colors.error
+            : theme.mode === 'dark'
+            ? theme.colors.shade600
+            : theme.colors.shade400,
+          backgroundColor: props.invalid
+            ? theme.colors.dangerMessageBg
+            : props.variant === 'filled' || !props.variant
+            ? theme.mode === 'dark'
+              ? theme.colors.shade800
+              : theme.colors.shade000
+            : 'rgba(0,0,0,0)',
         },
         rightIcon: {
           color:
@@ -226,6 +228,7 @@ export const rnuiTheme = createTheme({
           paddingHorizontal: 16,
           justifyContent: 'center',
           alignItems: 'center',
+          borderRadius: props.rounded ? 30 : 6,
         },
         icon: {
           color:
@@ -245,6 +248,69 @@ export const rnuiTheme = createTheme({
         },
       }
     },
+    Dialog: (props, theme) => {
+      return {
+        overlayStyle: {
+          backgroundColor: theme.colors.background,
+          borderRadius: 6,
+        },
+      }
+    },
+    DialogTitle: (props, theme) => {
+      return {
+        titleStyle: {
+          color: theme.colors.textColor,
+        },
+      }
+    },
+    DialogButton: (props, theme) => {
+      let styleColor = generateColor({
+        color: props.color,
+        theme: theme.colors,
+      })
+
+      return {
+        type: props.outlined ? 'outline' : props.text ? 'clear' : 'solid',
+        titleStyle: {
+          color:
+            props.outlined || props.text
+              ? styleColor
+              : theme.colors.primaryTextColor,
+          fontFamily: 'Inter-Medium',
+          fontSize: props.size === 'sm' ? 12 : props.size === 'lg' ? 20 : 16,
+          fontWeight: '600',
+        },
+        style: {
+          paddingVertical: 12,
+          paddingHorizontal: 16,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: props.rounded ? 30 : 6,
+        },
+        icon: {
+          color:
+            props.outlined || props.text
+              ? theme.colors.primary
+              : theme.colors.primaryTextColor,
+        },
+        containerStyle: {
+          padding: 10,
+          borderRadius: props.rounded ? 30 : 6,
+        },
+        buttonStyle: {
+          borderRadius: props.rounded ? 30 : 6,
+          backgroundColor:
+            props.outlined || props.text ? 'rgba(0,0,0,0)' : styleColor,
+          borderColor: props.outlined ? styleColor : 'rgba(0,0,0,0)',
+        },
+      }
+    },
+    Divider: (props, theme) => {
+      return {
+        color:
+          theme.mode === 'dark' ? theme.colors.shade600 : theme.colors.shade300,
+      }
+    },
     Icon: (props, theme) => {
       return {
         pressableProps: {
@@ -257,12 +323,7 @@ export const rnuiTheme = createTheme({
         },
       }
     },
-    Divider: (props, theme) => {
-      return {
-        color:
-          theme.mode === 'dark' ? theme.colors.shade600 : theme.colors.shade300,
-      }
-    },
+    //* List Item Components
     ListItem: (props, theme) => {
       return {
         containerStyle: {
