@@ -1,11 +1,10 @@
-import { Text } from '@/components/Themed'
+import { View } from '@/components/Themed'
 import { DialogActions } from '@rneui/base/dist/Dialog/Dialog.Actions'
 import { Dialog, useTheme } from '@rneui/themed'
 import React from 'react'
-import { View, ViewProps } from 'react-native'
 
 type GlobalModalProps = {
-  children: React.ReactNode
+  children?: React.ReactNode
   visible: boolean
   onBackdropPress: () => void
   action?: () => void
@@ -20,13 +19,10 @@ const GlobalModalService: React.FC<GlobalModalProps> = ({
   buttonTitle,
   title = 'Konfirmasi Logout',
 }) => {
-  const theme = useTheme()
+  const { theme } = useTheme()
   return (
     <Dialog
       isVisible={visible}
-      overlayStyle={{
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      }}
       onBackdropPress={onBackdropPress}
       style={{
         width: '80%',
@@ -34,9 +30,15 @@ const GlobalModalService: React.FC<GlobalModalProps> = ({
       }}
     >
       <Dialog.Title title={title} />
+      <View>{children}</View>
       <DialogActions>
-        <Dialog.Button title='Tutup' onPress={onBackdropPress} />
-        <Dialog.Button title={buttonTitle ?? 'Logout'} onPress={action} />
+        <Dialog.Button text title={buttonTitle ?? 'Logout'} onPress={action} />
+        <Dialog.Button
+          color={'secondary'}
+          text
+          title='Kembali'
+          onPress={onBackdropPress}
+        />
       </DialogActions>
       {/* <Card
         header={(props) => <HeaderModal {...props} title={title} />}
