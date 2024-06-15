@@ -1,10 +1,7 @@
 import { ScrollView, StyleSheet } from 'react-native'
 import React from 'react'
 import DynamicForm from '../form/dynamic-form'
-import {
-  UpdateUserSchema,
-  UserCitizenSchema,
-} from '@/utils/schemas/user-schema'
+import { UserCitizenSchema } from '@/utils/schemas/user-schema'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { formState, setFormState } from '@/store/slices/config-slices'
 import { useGetUserDetailQuery } from '@/services/users/user-slices'
@@ -44,20 +41,20 @@ const EditCitizenshipForm = () => {
         keyboardType: 'number-pad',
       },
     },
-    // {
-    //   name: 'gender',
-    //   type: 'select',
-    //   label: 'Jenis Kelamin',
-    //   defaultValue: user?.user_detail.citizenship?.gender,
-
-    //   options: [
-    //     { label: 'Laki-laki', value: 'Male' },
-    //     {
-    //       label: 'Perempuan',
-    //       value: 'Female',
-    //     },
-    //   ],
-    // },
+    {
+      name: 'gender',
+      type: 'select',
+      label: 'Jenis Kelamin',
+      defaultValue: user?.user_detail.citizenship?.gender,
+      placeholder: 'Pilih Jenis Kelamin',
+      options: [
+        { label: 'Laki-laki', value: 'Male' },
+        {
+          label: 'Perempuan',
+          value: 'Female',
+        },
+      ],
+    },
     {
       name: 'birth_place',
       type: 'text',
@@ -71,17 +68,19 @@ const EditCitizenshipForm = () => {
       defaultValue: user?.user_detail.citizenship?.birth_date,
     },
 
-    // {
-    //   name: 'marital_status',
-    //   type: 'select',
-    //   label: 'Status Pernikahan',
-    //   defaultValue: user?.user_detail.citizenship?.marital_status,
-    //   options: [
-    //     { label: 'Lajang', value: 'Single' },
-    //     { label: 'Menikah', value: 'Married' },
-    //     { label: 'Cerai', value: 'Divorced' },
-    //   ],
-    // },
+    {
+      name: 'marital_status',
+      type: 'select',
+      label: 'Status Pernikahan',
+      placeholder: 'Pilih Status',
+
+      defaultValue: user?.user_detail.citizenship?.marital_status,
+      options: [
+        { label: 'Lajang', value: 'Single' },
+        { label: 'Menikah', value: 'Married' },
+        { label: 'Cerai', value: 'Divorced' },
+      ],
+    },
 
     {
       type: 'separator',
@@ -94,17 +93,18 @@ const EditCitizenshipForm = () => {
       defaultValue: user?.user_detail.citizenship?.address?.address,
     },
     {
-      name: 'address.district',
-      type: 'text',
-      label: 'Jalan',
-      defaultValue: user?.user_detail.citizenship?.address?.district,
-    },
-    {
       name: 'address.village',
       type: 'text',
-      label: 'Jalan',
+      label: 'Desa/Kelurahan',
       defaultValue: user?.user_detail.citizenship?.address?.village,
     },
+    {
+      name: 'address.district',
+      type: 'text',
+      label: 'Kecamatan',
+      defaultValue: user?.user_detail.citizenship?.address?.district,
+    },
+
     {
       name: 'address.city',
       type: 'text',
@@ -122,6 +122,10 @@ const EditCitizenshipForm = () => {
       type: 'text',
       label: 'Kode Pos',
       defaultValue: user?.user_detail.citizenship?.address?.postal_code,
+      attr: {
+        disabled: false,
+        keyboardType: 'number-pad',
+      },
     },
   ]
 
