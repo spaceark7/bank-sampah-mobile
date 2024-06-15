@@ -25,13 +25,13 @@ const UserCitizenSchema = yup.object({
     .string()
     .matches(/^[0-9]+$/, 'Nomor KTP tidak valid')
     .min(16, 'Nomor KTP tidak valid')
-    .max(16, 'Nomor KTP tidak valid'),
-  // .required('Nomor KTP tidak boleh kosong'),
+    .max(16, 'Nomor KTP lebih dari 16 digit'),
+  // .required('Nomor KTP kosong'),
   family_id_number: yup
     .string()
     .matches(/^[0-9]+$/, 'Nomor KK tidak valid')
     .min(16, 'Nomor KK tidak valid')
-    .max(16, 'Nomor KK tidak valid'),
+    .max(16, 'Nomor KK lebih dari 16 digit'),
   // .required('Nomor KK tidak boleh kosong'),
   id_card_image_url: yup.string().url('URL tidak valid'),
   gender: yup.string().oneOf(['Male', 'Female'], 'Jenis kelamin tidak valid'),
