@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native'
 
 interface ContentLoaderProps {
   isLoading: boolean
-  type?: 'list-icon' | 'list' | 'card'
+  type?: 'list-icon' | 'list' | 'card' | 'circle'
   height?: number
   width?: number
   row?: boolean
@@ -79,6 +79,14 @@ const ContentLoader = (props: ContentLoaderProps) => {
             />
           </View>
         ))}
+      {type === 'circle' && props.isLoading && (
+        <Skeleton
+          LinearGradientComponent={LinearGradient}
+          animation='wave'
+          height={height || 30}
+          width={width || 30}
+        />
+      )}
       {!props.isLoading && props.children}
     </>
   )
