@@ -1,15 +1,15 @@
 import React from 'react'
-import { Link, Tabs } from 'expo-router'
+import { Tabs } from 'expo-router'
 import { Appearance, Pressable } from 'react-native'
 
-import Colors from '@/constants/Colors'
 import { useColorScheme } from '@/components/useColorScheme'
 import { useClientOnlyValue } from '@/components/useClientOnlyValue'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 // import ProfileHeader from '@/components/ui/profile/profile-header'
 import { useTheme } from '@rneui/themed'
-import { View, Text } from '@/components/Themed'
+import { View } from '@/components/Themed'
+import ProfileHeader from '@/components/ui/profile/profile-header'
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -40,8 +40,12 @@ export default function TabLayout() {
         headerBackground: () => (
           <View
             style={{
-              height: 100,
+              height: 90,
               width: '100%',
+              backgroundColor:
+                theme.mode === 'dark'
+                  ? theme.colors.shade800
+                  : theme.colors.background,
             }}
           />
         ),
@@ -59,7 +63,7 @@ export default function TabLayout() {
             />
           ),
 
-          headerLeft: () => <Text> Profile Header </Text>,
+          headerLeft: () => <ProfileHeader />,
           headerLeftContainerStyle: {
             marginLeft: 15,
           },
@@ -97,7 +101,7 @@ export default function TabLayout() {
             />
           ),
 
-          headerLeft: () => <Text> Profile Header </Text>,
+          headerLeft: () => <ProfileHeader />,
         }}
       />
       <Tabs.Screen
