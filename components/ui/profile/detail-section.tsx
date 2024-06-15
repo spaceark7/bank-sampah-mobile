@@ -1,12 +1,10 @@
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Pressable } from 'react-native'
 import React from 'react'
-import IconDisplay from '../icon-display'
 import DetailItem from './detail-item'
 import DetailList from './detail-list'
 import { getValueFromPath } from '@/utils/types'
 import { Text } from '@/components/Themed'
 import { Button, Divider, useTheme } from '@rneui/themed'
-const PenIcon = (props: any) => <IconDisplay name='edit-outline' {...props} />
 
 type DetailSectionProps<T> = {
   data: T | null
@@ -14,6 +12,10 @@ type DetailSectionProps<T> = {
   field: any
   title?: string
   action?: () => void
+}
+
+function CustomPressable() {
+  return (props: any) => <Pressable {...props}>{props.children}</Pressable>
 }
 
 const DetailSection = <T,>({
@@ -53,6 +55,7 @@ const DetailSection = <T,>({
           onPress={() => {
             action && action()
           }}
+          useForeground={false}
         />
       </View>
       <Divider />
