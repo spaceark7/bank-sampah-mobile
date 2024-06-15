@@ -2,7 +2,6 @@ import { View, Text as TextNative } from 'react-native'
 import React from 'react'
 import { CurrencyFormatter } from '@/utils/types'
 import { Button, Text } from '@ui-kitten/components'
-import IconDisplay from '../icon-display'
 
 const BalanceCard = () => {
   const [visible, setVisible] = React.useState(false)
@@ -45,7 +44,6 @@ const BalanceCard = () => {
           size='large'
           appearance='ghost'
           status='primary'
-          accessoryLeft={<IconDisplay name={visible ? 'eye' : 'eye-off-2'} />}
           onPress={() => setVisible(!visible)}
         />
       </View>
