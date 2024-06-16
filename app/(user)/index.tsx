@@ -1,6 +1,6 @@
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native'
 
-import BalanceCard from '@/components/ui/dashboard/balance-card'
+import BalanceCard from '@/components/ui/screens/dashboard/balance-card'
 
 import TransactionItem from '@/components/ui/transaction/transaction-item'
 import { useAppSelector } from '@/store/hooks'

@@ -161,7 +161,7 @@ export const rnuiTheme = createTheme({
             : props.variant === 'filled' || !props.variant
             ? theme.mode === 'dark'
               ? theme.colors.shade800
-              : theme.colors.shade000
+              : theme.colors.shade200
             : 'rgba(0,0,0,0)',
         },
         rightIcon: {
@@ -188,7 +188,7 @@ export const rnuiTheme = createTheme({
             props.variant === 'filled'
               ? theme.mode === 'dark'
                 ? theme.colors.shade800
-                : theme.colors.shade000
+                : theme.colors.shade200
               : 'rgba(0,0,0,0)',
 
           color:
