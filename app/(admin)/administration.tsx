@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet } from 'react-native'
 import React from 'react'
-import AdminScreen from '@/components/ui/admin/admin-screen'
+import AdminScreen from '@/components/ui/screens/admin/admin-screen'
 
 const administration = () => {
   return (
@@ -9,7 +9,7 @@ const administration = () => {
         flex: 1,
       }}
     >
-      {/* <AdminScreen /> */}
+      <AdminScreen />
     </SafeAreaView>
   )
 }
