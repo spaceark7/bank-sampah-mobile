@@ -1,18 +1,15 @@
-import { TouchableOpacity, useColorScheme } from 'react-native'
+import { useColorScheme } from 'react-native'
 
 import React, { useEffect } from 'react'
 import { ThemeProvider } from '@react-navigation/native'
 import { Icon, ThemeProvider as RNETheme, useTheme } from '@rneui/themed'
 import { Stack, useRouter } from 'expo-router'
-import Ionicons from '@expo/vector-icons/Ionicons'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { DarkTheme, DefaultTheme } from '@/themes/foundation'
 import { ModalService } from '@ui-kitten/components'
-import { default as themeFile } from '@/themes/theme.json'
 import { ThemeContext } from '@/themes/theme-context'
-import { EvaIconsPack } from '@ui-kitten/eva-icons'
 import { RootSiblingParent } from 'react-native-root-siblings'
-import useSecureStore from '@/hooks/secure-store'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { loginSuccess, resetInit } from '@/store/slices/auth-slices'
 import {
@@ -26,6 +23,7 @@ import { StatusBar } from 'expo-status-bar'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import { rnuiTheme } from '@/themes/rnui-theme'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 ModalService.setShouldUseTopInsets = true
 
 const MainLayout = () => {
@@ -97,7 +95,11 @@ const MainLayout = () => {
             }}
           >
             <RootSiblingParent>
-              <StackRouter />
+              <GestureHandlerRootView>
+                <BottomSheetModalProvider>
+                  <StackRouter />
+                </BottomSheetModalProvider>
+              </GestureHandlerRootView>
             </RootSiblingParent>
           </SafeAreaProvider>
         </ThemeProvider>
