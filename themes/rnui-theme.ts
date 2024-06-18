@@ -141,71 +141,64 @@ export const rnuiTheme = createTheme({
     borderRadius: 6,
     containerPadding: 16,
   },
+  typography: {
+    h1: {
+      fontSize: 32,
+      fontWeight: 'bold',
+    },
+    h2: {
+      fontSize: 24,
+      fontWeight: 'bold',
+    },
+    h3: {
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
+    h4: {
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    h5: {
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    h6: {
+      fontSize: 14,
+      fontWeight: 'bold',
+    },
+    subtitle1: {
+      fontSize: 16,
+      fontWeight: 'medium',
+    },
+    subtitle2: {
+      fontSize: 14,
+      fontWeight: 'medium',
+    },
+    body1: {
+      fontSize: 16,
+      fontWeight: 'regular',
+    },
+    body2: {
+      fontSize: 14,
+      fontWeight: 'regular',
+    },
+    caption: {
+      fontSize: 12,
+      fontWeight: 'regular',
+    },
+    overline: {
+      fontSize: 10,
+      fontWeight: 'regular',
+    },
+  },
   components: {
-    Input: (props, theme) => {
+    Avatar: (props, theme) => {
       return {
-        containerStyle: {
-          paddingHorizontal: 0,
-        },
-        inputContainerStyle: {
-          borderBottomWidth: props.variant === 'outlined' ? 1 : 0,
-          borderWidth: props.variant === 'outlined' ? 1 : 0,
-          borderRadius: 6,
-          borderColor: props.invalid
-            ? theme.colors.error
-            : theme.mode === 'dark'
-            ? theme.colors.shade600
-            : theme.colors.shade400,
-          backgroundColor: props.invalid
-            ? theme.colors.dangerMessageBg
-            : props.variant === 'filled' || !props.variant
-            ? theme.mode === 'dark'
-              ? theme.colors.shade800
-              : theme.colors.shade200
-            : 'rgba(0,0,0,0)',
-        },
-        rightIcon: {
-          color:
-            theme.mode === 'dark'
-              ? theme.colors.shade100
-              : theme.colors.shade700,
-        },
-        rightIconContainerStyle: {
-          marginEnd: 6,
-        },
-        leftIconContainerStyle: {
-          marginStart: 6,
-        },
-        labelStyle: {
-          fontSize: 12,
-          fontWeight: '500',
-          marginBottom: 4,
-        },
-        style: {
-          borderRadius: 6,
-          padding: 10,
-          backgroundColor:
-            props.variant === 'filled'
-              ? theme.mode === 'dark'
-                ? theme.colors.shade800
-                : theme.colors.shade200
-              : 'rgba(0,0,0,0)',
-
-          color:
-            theme.mode === 'dark'
-              ? theme.colors.shade100
-              : theme.colors.shade700,
-          fontSize: 16,
-          lineHeight: 24,
-          fontFamily: 'Inter-Regular',
-          placeholderTextColor:
-            theme.mode === 'dark'
-              ? theme.colors.shade100
-              : theme.colors.shade600,
+        titleStyle: {
+          color: theme.colors.textColor,
         },
       }
     },
-
     Button: (props, theme) => {
       let styleColor = generateColor({
         color: props.color,
@@ -225,7 +218,6 @@ export const rnuiTheme = createTheme({
         },
         style: {
           paddingVertical: 12,
-          paddingHorizontal: 16,
           justifyContent: 'center',
           alignItems: 'center',
           borderRadius: props.rounded ? 30 : 6,
@@ -235,6 +227,9 @@ export const rnuiTheme = createTheme({
             props.outlined || props.text
               ? theme.colors.primary
               : theme.colors.primaryTextColor,
+        },
+        iconContainerStyle: {
+          marginHorizontal: props.icon ? 4 : 0,
         },
         containerStyle: {
           padding: 10,
@@ -320,6 +315,69 @@ export const rnuiTheme = createTheme({
                 ? theme.colors.shade600
                 : theme.colors.shade400,
           },
+        },
+      }
+    },
+    Input: (props, theme) => {
+      return {
+        containerStyle: {
+          paddingHorizontal: 0,
+        },
+        inputContainerStyle: {
+          borderBottomWidth: props.variant === 'outlined' ? 1 : 0,
+          borderWidth: props.variant === 'outlined' ? 1 : 0,
+          borderRadius: 6,
+          borderColor: props.invalid
+            ? theme.colors.error
+            : theme.mode === 'dark'
+            ? theme.colors.shade600
+            : theme.colors.shade400,
+          backgroundColor: props.invalid
+            ? theme.colors.dangerMessageBg
+            : props.variant === 'filled' || !props.variant
+            ? theme.mode === 'dark'
+              ? theme.colors.shade800
+              : theme.colors.shade200
+            : 'rgba(0,0,0,0)',
+        },
+        rightIcon: {
+          color:
+            theme.mode === 'dark'
+              ? theme.colors.shade100
+              : theme.colors.shade700,
+        },
+        rightIconContainerStyle: {
+          marginEnd: 6,
+        },
+        leftIconContainerStyle: {
+          marginStart: 6,
+        },
+        labelStyle: {
+          fontSize: 12,
+          fontWeight: '500',
+          marginBottom: 4,
+        },
+        style: {
+          borderRadius: 6,
+          padding: 10,
+          backgroundColor:
+            props.variant === 'filled'
+              ? theme.mode === 'dark'
+                ? theme.colors.shade800
+                : theme.colors.shade200
+              : 'rgba(0,0,0,0)',
+
+          color:
+            theme.mode === 'dark'
+              ? theme.colors.shade100
+              : theme.colors.shade700,
+          fontSize: 16,
+          lineHeight: 24,
+          fontFamily: 'Inter-Regular',
+          placeholderTextColor:
+            theme.mode === 'dark'
+              ? theme.colors.shade100
+              : theme.colors.shade600,
         },
       }
     },

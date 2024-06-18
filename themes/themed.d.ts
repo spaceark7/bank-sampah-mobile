@@ -4,6 +4,38 @@ import '@rneui/themed'
 import { StringOmit } from '@rneui/base'
 
 declare module '@rneui/themed' {
+  type FontWeight =
+    | 'normal'
+    | 'bold'
+    | '100'
+    | '200'
+    | '300'
+    | '400'
+    | '500'
+    | '600'
+    | '700'
+    | '800'
+    | '900'
+    | 100
+    | 200
+    | 300
+    | 400
+    | 500
+    | 600
+    | 700
+    | 800
+    | 900
+    | 'ultralight'
+    | 'thin'
+    | 'light'
+    | 'medium'
+    | 'regular'
+    | 'semibold'
+    | 'condensedBold'
+    | 'condensed'
+    | 'heavy'
+    | 'black'
+    | undefined
   export interface Colors {
     secondary: string
     info: string
@@ -54,6 +86,68 @@ declare module '@rneui/themed' {
     global: {
       borderRadius: number
       containerPadding: number
+    }
+    typography: {
+      h1: {
+        fontSize: number
+        fontWeight: FontWeight
+        color: Colors
+      }
+      h2: {
+        fontSize: number
+        fontWeight: FontWeight
+        color: Colors
+      }
+      h3: {
+        fontSize: number
+        fontWeight: FontWeight
+        color: Colors
+      }
+      h4: {
+        fontSize: number
+        fontWeight: FontWeight
+        color: Colors
+      }
+      h5: {
+        fontSize: number
+        fontWeight: FontWeight
+        color: Colors
+      }
+      h6: {
+        fontSize: number
+        fontWeight: FontWeight
+        color: Colors
+      }
+      subtitle1: {
+        fontSize: number
+        fontWeight: FontWeight
+        color: Colors
+      }
+      subtitle2: {
+        fontSize: number
+        fontWeight: FontWeight
+        color: Colors
+      }
+      body1: {
+        fontSize: number
+        fontWeight: FontWeight
+        color: Colors
+      }
+      body2: {
+        fontSize: number
+        fontWeight: FontWeight
+        color: Colors
+      }
+      caption: {
+        fontSize: number
+        fontWeight: FontWeight
+        color: Colors
+      }
+      overline: {
+        fontSize: number
+        fontWeight: FontWeight
+        color: Colors
+      }
     }
   }
 
