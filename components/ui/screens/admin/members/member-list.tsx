@@ -1,6 +1,6 @@
-import { RefreshControl, ActivityIndicator } from 'react-native'
-import React, { useCallback } from 'react'
-import { DateFormatter } from '@/utils/types'
+import { RefreshControl, ActivityIndicator, Pressable } from 'react-native'
+import React, { useCallback, useMemo, useRef } from 'react'
+import { Filters, parseFilter } from '@/utils/types'
 
 import useRefreshScreen from '@/hooks/refresh-screen/useRefreshScreen'
 import {
@@ -13,23 +13,45 @@ import Toast from 'react-native-root-toast'
 import { useAppDispatch } from '@/store/hooks'
 import { FlashList } from '@shopify/flash-list'
 import { Link, useRouter } from 'expo-router'
-import ListCardItem from '@/components/ui/list-card/list-card'
+import ListCardItem, { ListCard } from '@/components/ui/list-card/list-card'
 import { Text, View } from '@/components/Themed'
-import { Avatar, Button, Divider, FAB, Input } from '@rneui/themed'
+import { Avatar, Button, Divider, Icon } from '@rneui/themed'
 import { useTheme } from '@rneui/themed'
-import UILineChart from '@/components/ui/charts/LineChart'
 import UIBarChart from '@/components/ui/charts/BarChart'
 import InputFilter from '@/components/ui/input/input-filter'
-import GlobalBottomSheet from '@/components/ui/modal/global-bottom-sheet'
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import useDebounceValue from '@/hooks/debounce/useDebounceValue'
 
 const MemberList = () => {
   const { theme } = useTheme()
+  const ref = useRef<FlashList<UserEntity>>(null)
+  const [filters, setFilters] = React.useState<Filters[]>([
+    {
+      key: 'search',
+      value: undefined,
+      condition: 'contains',
+    },
+    {
+      key: 'order',
+      value: 'asc',
+      condition: 'eq',
+    },
+    {
+      key: 'is_active',
+      value: undefined,
+      condition: 'eq',
+    },
+    {
+      key: 'status',
+      value: '',
+      condition: 'eq',
+    },
+  ])
+  const [search, setSearch] = React.useState('')
   const [page, setPage] = React.useState(1)
   const [limit, setLimit] = React.useState(10)
   const [visible, setVisible] = React.useState(true)
-  const [showBottomSheet, setShowBottomSheet] = React.useState(false)
   const dispatch = useAppDispatch()
+  const debounceValue = useDebounceValue(search, 1000)
   const {
     data: members,
     isLoading: memberLoading,
@@ -40,6 +62,10 @@ const MemberList = () => {
     {
       limit: limit,
       page: page,
+      search: debounceValue,
+      is_active: parseFilter(filters, 'is_active'),
+      status: parseFilter(filters, 'status'),
+      order: parseFilter(filters, 'order'),
     },
     {
       skip: !page,
@@ -74,8 +100,11 @@ const MemberList = () => {
       }
     }
   }
-  const toggleBottomSheet = () => {
-    setShowBottomSheet((prev) => !prev)
+  const focusToInputFilter = () => {
+    ref.current?.scrollToOffset({
+      offset: 380,
+      animated: true,
+    })
   }
 
   const onLoadMore = () => {
@@ -96,46 +125,194 @@ const MemberList = () => {
     ({ item }: { item: UserEntity }) => (
       <Link
         href={{
-          pathname: '/(members)/member-detail',
-          params: { members: item.id },
+          pathname: '/edit-modal',
+          params: {
+            memberId: item.id,
+            memberDetailId: item.user_detail.id,
+            title: `Detail Member`,
+            segment: 'member-detail',
+          },
         }}
         style={{
           width: '100%',
         }}
         asChild
       >
-        <ListCardItem
-          // title={item.user_detail.first_name + ' ' + item.user_detail.last_name}
-          title={item.email}
-          accessoryLeft={
-            item.user_detail.user_image_url ? (
-              <Avatar
-                source={{
-                  uri: item.user_detail.user_image_url,
+        <Pressable>
+          <ListCardItem
+            // title={item.user_detail.first_name + ' ' + item.user_detail.last_name}
+            accessoryLeft={
+              item.user_detail.user_image_url ? (
+                <Avatar
+                  rounded
+                  size={50}
+                  source={{
+                    uri: item.user_detail.user_image_url,
+                  }}
+                />
+              ) : (
+                <Avatar
+                  title={
+                    item.user_detail.first_name[0].toUpperCase() +
+                    item.user_detail.last_name[0].toUpperCase()
+                  }
+                  rounded
+                  size={50}
+                />
+              )
+            }
+            // onPress={() => {
+            //   router.push(`/(admin)/members/${item.id}`)
+            // }}
+            // description={`Bergabung pada ${DateFormatter(
+            //   item.user_detail.activated_at
+            // )}`}
+          >
+            <ListCard.Container>
+              <Text>
+                {item.user_detail.first_name} {item.user_detail.last_name}
+              </Text>
+
+              <Text
+                variants='caption'
+                style={{
+                  color:
+                    theme.mode === 'dark'
+                      ? theme.colors.shade400
+                      : theme.colors.shade500,
                 }}
-              />
-            ) : (
-              <Avatar title='A' size={20} />
-            )
-          }
-          // onPress={() => {
-          //   router.push(`/(admin)/members/${item.id}`)
-          // }}
-          description={`Bergabung pada ${DateFormatter(
-            item.user_detail.activated_at
-          )}`}
-        />
+              >
+                {item.email}
+              </Text>
+              <Text
+                variants='caption'
+                style={{
+                  marginTop: 4,
+                  color:
+                    theme.mode === 'dark'
+                      ? theme.colors.shade400
+                      : theme.colors.shade600,
+                }}
+              >
+                {item.user_detail.activated_at ? (
+                  <StatusIcon status />
+                ) : (
+                  <StatusIcon status={false} />
+                )}
+              </Text>
+            </ListCard.Container>
+          </ListCardItem>
+        </Pressable>
       </Link>
     ),
     []
   )
 
+  const ListHeaderComponent = useMemo(() => {
+    return (
+      <View
+        style={{
+          paddingBottom: 10,
+        }}
+      >
+        <UIBarChart />
+        <Divider
+          style={{
+            marginVertical: 20,
+          }}
+        />
+        <Link
+          href={{
+            pathname: '/edit-modal',
+            params: {
+              title: `Tambah Member`,
+              segment: 'add-member',
+            },
+          }}
+          asChild
+        >
+          <Button
+            size='md'
+            icon={{
+              name: 'account-plus-outline',
+              type: 'material-community',
+            }}
+          >
+            Tambah Member
+          </Button>
+        </Link>
+        <Divider
+          style={{
+            marginVertical: 20,
+          }}
+        />
+        <InputFilter
+          onScrollTo={focusToInputFilter}
+          filters={filters}
+          search={search}
+          setSearch={setSearch}
+          setFilters={(filter) => {
+            setFilters(filter)
+          }}
+          resetFilters={() => resetFilter()}
+        />
+      </View>
+    )
+  }, [filters, search, setSearch, setFilters])
+
+  const ListEmptyComponent = useMemo(() => {
+    if (!memberSuccess && memberLoading) {
+      return <Text>Loading</Text>
+    } else if (members?.data.length === 0) {
+      if (debounceValue && debounceValue.length > 0) {
+        return (
+          <Text
+            style={{
+              textAlign: 'center',
+              padding: 20,
+            }}
+          >
+            "{debounceValue}" Tidak ditemukan
+          </Text>
+        )
+      }
+      return <Text>{debounceValue && debounceValue} Tidak ada data</Text>
+    }
+  }, [memberSuccess, debounceValue, memberLoading, members?.data.length])
+
+  const resetFilter = () => {
+    setFilters([
+      {
+        key: 'search',
+        value: undefined,
+        condition: 'contains',
+      },
+      {
+        key: 'order',
+        value: 'asc',
+        condition: 'eq',
+      },
+      {
+        key: 'is_active',
+        value: undefined,
+        condition: 'eq',
+      },
+      {
+        key: 'status',
+        value: '',
+        condition: 'eq',
+      },
+    ])
+    setSearch('')
+    setPage(1)
+  }
   return (
     <>
       <FlashList
         refreshControl={
           <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
         }
+        ref={ref}
         scrollEnabled
         showsVerticalScrollIndicator={false}
         bounces
@@ -146,40 +323,44 @@ const MemberList = () => {
             }}
           />
         )}
-        ListHeaderComponent={() => {
-          return (
-            <>
-              <View
-                style={{
-                  paddingBottom: 10,
-                }}
-              >
-                {/* <UILineChart />
-                 */}
-                <UIBarChart />
-                <Divider
-                  style={{
-                    marginVertical: 20,
-                  }}
-                />
-                <Button size='md'>Tambah User</Button>
-                <Divider
-                  style={{
-                    marginVertical: 20,
-                  }}
-                />
-              </View>
-              <InputFilter />
-              <GlobalBottomSheet
-                isVisible={showBottomSheet}
-                onDismiss={toggleBottomSheet}
-              />
-            </>
-          )
-        }}
-        ListEmptyComponent={() =>
-          !memberSuccess && memberLoading ? <Text>Loading</Text> : null
+        ListHeaderComponent={
+          ListHeaderComponent
+          //   () => {
+          //   return (
+          //     <View
+          //       style={{
+          //         paddingBottom: 10,
+          //       }}
+          //     >
+          //       {/* <UILineChart />
+          //        */}
+          //       <UIBarChart />
+          //       <Divider
+          //         style={{
+          //           marginVertical: 20,
+          //         }}
+          //       />
+          //       <Button size='md'>Tambah User</Button>
+          //       <Divider
+          //         style={{
+          //           marginVertical: 20,
+          //         }}
+          //       />
+          //       <InputFilter
+          //         onScrollTo={focusToInputFilter}
+          //         filters={filters}
+          //         search={search}
+          //         setSearch={setSearch}
+          //         setFilters={(filter) => {
+          //           setFilters(filter)
+          //           // setPage(1)
+          //         }}
+          //       />
+          //     </View>
+          //   )
+          // }
         }
+        ListEmptyComponent={ListEmptyComponent}
         ListFooterComponent={() => (
           <View
             style={{
@@ -189,32 +370,27 @@ const MemberList = () => {
             {memberFetching && (
               <ActivityIndicator size='small' color={theme.colors.primary} />
             )}
-            {visible && !memberFetching && (
+            {visible &&
+            !memberFetching &&
+            members?.meta?.totalItems &&
+            members?.meta?.totalItems > limit ? (
               <Button
                 text
                 size='sm'
                 disabled={memberFetching}
-                // accessoryLeft={() => {
-                //   return memberFetching ? (
-                //     <Spinner size='small' />
-                //   ) : (
-                //     <React.Fragment />
-                //   )
-                // }}
                 onPress={onLoadMore}
-              >
-                {memberFetching ? 'Sedang Memuat' : 'Muat lebih banyak'}
-              </Button>
-            )}
+                title={memberFetching ? 'Sedang Memuat' : 'Muat lebih banyak'}
+              ></Button>
+            ) : null}
           </View>
         )}
         data={members?.data || []}
         renderItem={renderItem}
         estimatedItemSize={80}
         getItemType={(item) => {
-          return item.email
+          return item.id
         }}
-        keyExtractor={(item) => item.email}
+        keyExtractor={(item) => item.id}
         // onEndReached={() => !memberFetching && memberSuccess && onLoadMore()}
         // onEndReachedThreshold={1}
         extraData={limit}
@@ -224,6 +400,38 @@ const MemberList = () => {
         }}
       />
     </>
+  )
+}
+
+const StatusIcon = ({ status }: { status: boolean }) => {
+  const { theme } = useTheme()
+  return (
+    <View
+      style={{
+        backgroundColor: 'rgba(0,0,0,0)',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+      }}
+    >
+      <Icon
+        size={14}
+        color={status ? theme.colors.success : theme.colors.textSecondaryColor}
+        name='checkbox-marked-circle'
+        type='material-community'
+      />
+      <Text
+        variants='caption'
+        style={{
+          color:
+            theme.mode === 'dark'
+              ? theme.colors.shade400
+              : theme.colors.shade600,
+        }}
+      >
+        {status ? 'Terverifikasi' : 'Belum Aktif'}
+      </Text>
+    </View>
   )
 }
 
