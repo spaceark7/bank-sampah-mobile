@@ -7,7 +7,6 @@ import { Stack, useRouter } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { DarkTheme, DefaultTheme } from '@/themes/foundation'
-import { ModalService } from '@ui-kitten/components'
 import { ThemeContext } from '@/themes/theme-context'
 import { RootSiblingParent } from 'react-native-root-siblings'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
@@ -24,7 +23,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import { rnuiTheme } from '@/themes/rnui-theme'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
-ModalService.setShouldUseTopInsets = true
 
 const MainLayout = () => {
   const colorScheme = useColorScheme()
