@@ -27,6 +27,20 @@ export interface Meta {
   hasNextPage: boolean
   hasPreviousPage: boolean
 }
+export type Filters = {
+  value: string | undefined
+  condition:
+    | 'eq'
+    | 'ne'
+    | 'gt'
+    | 'lt'
+    | 'gte'
+    | 'lte'
+    | 'contains'
+    | 'in'
+    | 'notIn'
+  key: string
+}
 
 export interface FilterParam {
   [key: string]: any
@@ -40,6 +54,7 @@ export interface FilterParam {
   status?: string
   type?: string
   filter?: string
+  filters?: Filters[]
   user_id?: string
   is_deleted?: boolean
   is_active?: string | boolean
@@ -235,6 +250,16 @@ export const queryFilterBuilder = (filter: FilterParam, query: string) => {
   })
 
   return (query += '?' + queryParams.join('&'))
+}
+
+export const parseFilter = (filter: Filters[], key: string) => {
+  if (!filter) return undefined
+  const filterData = filter.find((item) => item.key === key)
+  if (filterData) {
+   return filterData.value
+  } else {
+    return undefined
+  }
 }
 
 export const Accumulator = (data: any[], key: string) => {
