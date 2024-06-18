@@ -14,7 +14,22 @@ type ThemeProps = {
   darkColor?: string
 }
 
-export type TextProps = ThemeProps & DefaultText['props']
+type TextVariant =
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'subtitle1'
+  | 'subtitle2'
+  | 'body1'
+  | 'body2'
+  | 'caption'
+  | 'overline'
+
+export type TextProps = ThemeProps &
+  DefaultText['props'] & { variants?: TextVariant }
 export type ViewProps = ThemeProps & DefaultView['props']
 
 export function useThemeColor(
@@ -31,6 +46,64 @@ export function useThemeColor(
   }
 }
 
+function generateTextColor(variant: string) {
+  const { theme } = useTheme()
+  switch (variant) {
+    case 'h1':
+      return theme.mode === 'dark'
+        ? theme.colors.textColor
+        : theme.colors.textColor
+    case 'h2':
+      return theme.mode === 'dark'
+        ? theme.colors.textColor
+        : theme.colors.textColor
+    case 'h3':
+      return theme.mode === 'dark'
+        ? theme.colors.textColor
+        : theme.colors.textColor
+    case 'h4':
+      return theme.mode === 'dark'
+        ? theme.colors.textColor
+        : theme.colors.textColor
+    case 'h5':
+      return theme.mode === 'dark'
+        ? theme.colors.textColor
+        : theme.colors.textColor
+    case 'h6':
+      return theme.mode === 'dark'
+        ? theme.colors.textColor
+        : theme.colors.textColor
+    case 'subtitle1':
+      return theme.mode === 'dark'
+        ? theme.colors.textColor
+        : theme.colors.textColor
+    case 'subtitle2':
+      return theme.mode === 'dark'
+        ? theme.colors.textColor
+        : theme.colors.textColor
+    case 'body1':
+      return theme.mode === 'dark'
+        ? theme.colors.textColor
+        : theme.colors.textColor
+    case 'body2':
+      return theme.mode === 'dark'
+        ? theme.colors.textColor
+        : theme.colors.textColor
+    case 'caption':
+      return theme.mode === 'dark'
+        ? theme.colors.shade400
+        : theme.colors.shade600
+    case 'overline':
+      return theme.mode === 'dark'
+        ? theme.colors.shade400
+        : theme.colors.shade600
+    default:
+      return theme.mode === 'dark'
+        ? theme.colors.shade400
+        : theme.colors.shade600
+  }
+}
+
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props
   // const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text')
@@ -38,7 +111,15 @@ export function Text(props: TextProps) {
 
   return (
     <DefaultText
-      style={[{ color: theme.colors.textColor }, style]}
+      style={[
+        {
+          color: generateTextColor(props.variants || 'body1'),
+          fontSize: theme.typography[props.variants || 'body1'].fontSize,
+          fontWeight: theme.typography[props.variants || 'body1'].fontWeight,
+          backgroundColor: 'rgba(0,0,0,0)',
+        },
+        style,
+      ]}
       {...otherProps}
     />
   )
@@ -55,7 +136,7 @@ export function View(props: ViewProps) {
 
   return (
     <DefaultView
-      style={[{ backgroundColor: theme.colors.background     }, style]}
+      style={[{ backgroundColor: theme.colors.background }, style]}
       {...otherProps}
     />
   )
