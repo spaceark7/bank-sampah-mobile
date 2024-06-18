@@ -35,6 +35,16 @@ export const MemberApiSlice = apiSlice.injectEndpoints({
         return response as ErrorResponse
       },
     }),
+    getMemberById: builder.query<UserEntity, string>({
+      query: (id) => `members/${id}`,
+      providesTags: (result, error, id) => [{ type: 'Member', id }],
+      transformResponse: (response: ResponseEntity<UserEntity>) => {
+        return response.data
+      },
+      transformErrorResponse: (response: { status: string | number }) => {
+        return response as ErrorResponse
+      },
+    }),
     getAllMember: builder.query<
       DataListResponse<UserEntity[]>,
       FilterParam | void
@@ -65,18 +75,18 @@ export const MemberApiSlice = apiSlice.injectEndpoints({
       forceRefetch({ currentArg, previousArg }) {
         return currentArg?.page !== previousArg?.page
       },
-      providesTags: ['Member'],
-      // providesTags: (result) => {
-      //   return result?.data
-      //     ? [
-      //         ...result.data.map(({ id }) => ({
-      //           type: 'Member' as const,
-      //           id: id,
-      //         })),
-      //         { type: 'Member', id: 'LIST' },
-      //       ]
-      //     : [{ type: 'Member', id: 'LIST' }]
-      // },
+      // providesTags: ['Member'],
+      providesTags: (result) => {
+        return result?.data
+          ? [
+              ...result.data.map(({ id }) => ({
+                type: 'Member' as const,
+                id: id,
+              })),
+              { type: 'Member', id: 'LIST' },
+            ]
+          : [{ type: 'Member', id: 'LIST' }]
+      },
       transformErrorResponse: (response: { status: string | number }) => {
         return response as ErrorResponse
       },
@@ -137,6 +147,7 @@ export const MemberApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useCreateMemberMutation,
+  useGetMemberByIdQuery,
   useUpdateMemberMutation,
   useAddMemberIdentityMutation,
   useUpdateMemberIdentityMutation,
