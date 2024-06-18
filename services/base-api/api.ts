@@ -34,6 +34,7 @@ export const apiSlice = createApi({
       console.log('prepareHeaders', token)
       if (token) {
         headers.set('authorization', `Bearer ${token}`)
+        headers.set('Content-Type', 'application/json')
       }
       return headers
     },
