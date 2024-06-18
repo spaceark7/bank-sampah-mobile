@@ -36,7 +36,7 @@ const EditModal = () => {
           },
 
           presentation: 'modal',
-          title: `Edit ${params.name as string}`,
+          title: (params.title as string) ?? 'Modal',
           headerStyle: {
             backgroundColor:
               theme.mode === 'dark'
@@ -45,7 +45,7 @@ const EditModal = () => {
           },
         }}
       />
-      <RenderScreen segment={params.segment as string} />
+      <RenderScreen segment={params.segment as string} {...params} />
     </View>
   )
 }
