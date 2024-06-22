@@ -7,7 +7,6 @@ import {
 
 import CardList from '@/components/ui/screens/dashboard/admin/card-list'
 import TransactionItem from '@/components/ui/transaction/transaction-item'
-import SkeletonContent from '@alanantar_sb/react-native-skeleton-content'
 import { DateFormatter } from '@/utils/types'
 
 import ListCardItem from '@/components/ui/list-card/list-card'
@@ -96,6 +95,7 @@ export default function HomeScreen() {
               style={{
                 ...styles.container,
                 alignItems: 'center',
+                paddingHorizontal: 20,
               }}
             >
               <Button
