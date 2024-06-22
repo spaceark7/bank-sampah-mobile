@@ -21,25 +21,28 @@ export const MemberApiSlice = apiSlice.injectEndpoints({
      * Member Related
      * @spaceark7
      */
-    createMember: builder.mutation<UserEntity, UserCreateParam>({
-      query: (params) => ({
-        url: `register`,
-        method: 'POST',
-        body: params,
-      }),
-      invalidatesTags: ['Member'],
-      transformResponse: (response: ResponseEntity<UserEntity>) => {
-        return response.data
-      },
-      transformErrorResponse: (response: { status: string | number }) => {
-        return response as ErrorResponse
-      },
-    }),
-    getMemberById: builder.query<UserEntity, string>({
+    createMember: builder.mutation<ResponseEntity<UserEntity>, UserCreateParam>(
+      {
+        query: (params) => ({
+          url: `register`,
+          method: 'POST',
+          body: params,
+        }),
+        invalidatesTags: ['Member'],
+        transformResponse: (response: ResponseEntity<UserEntity>) => {
+          return response
+        },
+        transformErrorResponse: (response: { status: string | number }) => {
+          console.log('transformErrorResponse', response)
+          return response as ErrorResponse
+        },
+      }
+    ),
+    getMemberById: builder.query<ResponseEntity<UserEntity>, string>({
       query: (id) => `members/${id}`,
       providesTags: (result, error, id) => [{ type: 'Member', id }],
       transformResponse: (response: ResponseEntity<UserEntity>) => {
-        return response.data
+        return response
       },
       transformErrorResponse: (response: { status: string | number }) => {
         return response as ErrorResponse
@@ -106,20 +109,20 @@ export const MemberApiSlice = apiSlice.injectEndpoints({
       },
     }),
     addMemberIdentity: builder.mutation<
-      UserEntity,
+      ResponseEntity<UserEntity>,
       {
         id: string
         data: InferType<typeof UserCitizenSchema>
       }
     >({
       query: (params) => ({
-        url: `users-citizenship/${params.id}`,
+        url: `users/citizenship/${params.id}`,
         method: 'POST',
         body: params.data,
       }),
       invalidatesTags: ['Member'],
       transformResponse: (response: ResponseEntity<UserEntity>) => {
-        return response.data
+        return response
       },
       transformErrorResponse: (response: { status: string | number }) => {
         return response as ErrorResponse
