@@ -232,7 +232,7 @@ export const rnuiTheme = createTheme({
           marginHorizontal: props.icon ? 4 : 0,
         },
         containerStyle: {
-          padding: 10,
+          paddingVertical: 10,
           borderRadius: props.rounded ? 30 : 6,
         },
         buttonStyle: {
