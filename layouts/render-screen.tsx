@@ -1,7 +1,8 @@
 import EditCitizenshipForm from '@/components/ui/profile/EditCitizenship'
 import EditForm from '@/components/ui/profile/EditForm'
-import AddMember from '@/components/ui/screens/admin/members/add-member'
+import ProfileView from '@/components/ui/profile/profile-view'
 import MemberDetailAdmin from '@/components/ui/screens/admin/members/member-detail-admin'
+import RegisterMember from '@/components/ui/screens/admin/members/member-register'
 
 const RenderScreen = ({
   segment,
@@ -18,8 +19,10 @@ const RenderScreen = ({
       return <EditCitizenshipForm />
     case 'member-detail':
       return <MemberDetailAdmin memberId={props.memberId} {...props} />
+    case 'member-profile':
+      return <ProfileView memberId={props.memberId} {...props} />
     case 'add-member':
-      return <AddMember {...props} />
+      return <RegisterMember {...props} />
     default:
       return null
   }
