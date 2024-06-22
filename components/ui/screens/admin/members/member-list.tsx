@@ -1,25 +1,24 @@
-import { RefreshControl, ActivityIndicator, Pressable } from 'react-native'
-import React, { useCallback, useMemo, useRef } from 'react'
 import { Filters, parseFilter } from '@/utils/types'
+import React, { useCallback, useMemo, useRef } from 'react'
+import { ActivityIndicator, Pressable, RefreshControl } from 'react-native'
 
+import { Text, View } from '@/components/Themed'
+import UIBarChart from '@/components/ui/charts/BarChart'
+import InputFilter from '@/components/ui/input/input-filter'
+import ListCardItem, { ListCard } from '@/components/ui/list-card/list-card'
+import useDebounceValue from '@/hooks/debounce/useDebounceValue'
+import useToast from '@/hooks/global-toast/useToast'
 import useRefreshScreen from '@/hooks/refresh-screen/useRefreshScreen'
 import {
   MemberApiSlice,
   useGetAllMemberQuery,
 } from '@/services/members/member-slices'
 import { UserEntity } from '@/services/users/user-entity'
-import useToast from '@/hooks/global-toast/useToast'
-import Toast from 'react-native-root-toast'
 import { useAppDispatch } from '@/store/hooks'
+import { Avatar, Button, Divider, Icon, useTheme } from '@rneui/themed'
 import { FlashList } from '@shopify/flash-list'
 import { Link, useRouter } from 'expo-router'
-import ListCardItem, { ListCard } from '@/components/ui/list-card/list-card'
-import { Text, View } from '@/components/Themed'
-import { Avatar, Button, Divider, Icon } from '@rneui/themed'
-import { useTheme } from '@rneui/themed'
-import UIBarChart from '@/components/ui/charts/BarChart'
-import InputFilter from '@/components/ui/input/input-filter'
-import useDebounceValue from '@/hooks/debounce/useDebounceValue'
+import Toast from 'react-native-root-toast'
 
 const MemberList = () => {
   const { theme } = useTheme()

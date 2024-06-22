@@ -1,13 +1,18 @@
 import { StyleSheet } from 'react-native'
-import React from 'react'
-import Stepper from 'react-native-stepper-view'
+import React, { useRef } from 'react'
+import Stepper, { StepperRefAttributes } from 'react-native-stepper-view'
 import { Text, View } from '@/components/Themed'
 import { Button, Icon, useTheme } from '@rneui/themed'
+import RegisterForm from './components/register-member-form'
+import RegisterCitizenshipForm from './components/register-member-citizenship-form'
+import { router } from 'expo-router'
 
-const AddMember = () => {
+const RegisterMember = () => {
   const { theme } = useTheme()
-
+  const [userId, setUserId] = React.useState<string>('')
+  const stepperRef = useRef<StepperRefAttributes>(null)
   //* Methods
+
   const handleSubmit = React.useCallback(() => {
     console.log('submitted')
   }, [])
@@ -23,13 +28,20 @@ const AddMember = () => {
   return (
     <View style={{ flex: 1, padding: 20 }}>
       <Stepper
+        ref={stepperRef}
         onSubmit={handleSubmit}
         onPrevStep={handlePrevStep}
         onNextStep={handleNextStep}
-        numberOfSteps={3}
+        numberOfSteps={2}
         stepContainerStyle={{
           backgroundColor: theme.colors.background,
         }}
+        stepIconsContainerStyle={{
+          width: '100%',
+          justifyContent: 'space-between',
+          backgroundColor: theme.colors.background,
+        }}
+        showButtons={true}
         ButtonComponent={({ onPress, disabled, step, type }) => (
           <Button
             onPress={onPress}
@@ -50,7 +62,7 @@ const AddMember = () => {
         )}
       >
         <Stepper.Step
-          label='Step 1'
+          label='Informasi'
           activeStepIconBgColor={theme.colors.primary}
           activeStepIconBorderColor={theme.colors.primary}
           completedStepIconBgColor={theme.colors.primary}
@@ -79,15 +91,18 @@ const AddMember = () => {
             />
           }
         >
-          <View
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-          >
-            <Text>Step 1 view</Text>
+          <View style={styles.form_container}>
+            <RegisterForm
+              setUserId={setUserId}
+              onCallback={() => {
+                stepperRef.current?.nextStep()
+              }}
+            />
           </View>
         </Stepper.Step>
 
         <Stepper.Step
-          label='Step 2'
+          label='Identitas'
           activeStepIconBgColor={theme.colors.primary}
           activeStepIconBorderColor={theme.colors.primary}
           completedStepIconBgColor={theme.colors.primary}
@@ -116,47 +131,13 @@ const AddMember = () => {
             />
           }
         >
-          <View
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-          >
-            <Text>Step 2 view</Text>
-          </View>
-        </Stepper.Step>
-
-        <Stepper.Step
-          activeStepIconBgColor={theme.colors.primary}
-          activeStepIconBorderColor={theme.colors.primary}
-          completedStepIconBgColor={theme.colors.primary}
-          disabledStepIconBgColor={theme.colors.shade300}
-          disabledStepNumColor={theme.colors.primaryTextColor}
-          progressBarBgColor={
-            theme.mode === 'dark'
-              ? theme.colors.shade000
-              : theme.colors.shade400
-          }
-          completedProgressBarBgColor={theme.colors.primary}
-          activeIcon={
-            <Icon
-              name='card-account-details'
-              size={24}
-              color={theme.colors.primaryTextColor}
-              type='material-community'
+          <View style={styles.form_container}>
+            <RegisterCitizenshipForm
+              userId={userId}
+              onCallback={() => {
+                router.dismiss()
+              }}
             />
-          }
-          completedIcon={
-            <Icon
-              name='check-bold'
-              size={24}
-              color={theme.colors.primaryTextColor}
-              type='material-community'
-            />
-          }
-          label='Step 3'
-        >
-          <View
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-          >
-            <Text>Step 3 view</Text>
           </View>
         </Stepper.Step>
       </Stepper>
@@ -164,6 +145,10 @@ const AddMember = () => {
   )
 }
 
-export default AddMember
+export default RegisterMember
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  form_container: {
+    paddingVertical: 20,
+  },
+})

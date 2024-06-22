@@ -179,19 +179,19 @@ const MemberDetailAdmin = ({
                 ...styles.row,
               }}
             >
-              {member.user_detail.user_image_url ? (
+              {member.data.user_detail.user_image_url ? (
                 <Avatar
                   rounded
                   size={80}
                   source={{
-                    uri: member.user_detail.user_image_url,
+                    uri: member.data.user_detail.user_image_url,
                   }}
                 />
               ) : (
                 <Avatar
                   title={
-                    member.user_detail.first_name[0].toUpperCase() +
-                    member.user_detail.last_name[0].toUpperCase()
+                    member.data.user_detail.first_name[0].toUpperCase() +
+                    member.data.user_detail.last_name[0].toUpperCase()
                   }
                   titleStyle={{
                     padding: 6,
@@ -215,11 +215,11 @@ const MemberDetailAdmin = ({
                     marginBottom: 4,
                   }}
                 >
-                  {member.user_detail.first_name} {member.user_detail.last_name}
+                  {member.data.user_detail.first_name} {member.data.user_detail.last_name}
                 </Text>
                 <Text variants='caption'>Telah menjadi member sejak</Text>
                 <Text variants='caption'>
-                  {DateFormatter(member.user_detail.activated_at)}
+                  {DateFormatter(member.data.user_detail.activated_at)}
                 </Text>
               </View>
             </View>
@@ -247,7 +247,7 @@ const MemberDetailAdmin = ({
                 <Text variants='h6'>Saldo</Text>
               </View>
               <Text variants='h1'>
-                {CurrencyFormatter(member.user_detail.balance?.balance_amount)}
+                {CurrencyFormatter(member.data.user_detail.balance?.balance_amount)}
               </Text>
 
               <Text
@@ -257,11 +257,26 @@ const MemberDetailAdmin = ({
                 }}
               >
                 Transaksi terakhir{' '}
-                {DateFormatter(member.user_detail.activated_at)}
+                {DateFormatter(member.data.user_detail.activated_at)}
               </Text>
             </View>
             {/* Member Detail */}
-            <Button color='secondary' title={'Lihat Profil Member'} />
+            <Link
+              href={{
+                pathname: '/edit-modal',
+                params: {
+                  memberId: memberId,
+                  title: `Profile Member`,
+                  segment: 'member-profile',
+                },
+              }}
+              style={{
+                width: '100%',
+              }}
+              asChild
+            >
+              <Button color='secondary' title={'Lihat Profil Member'} />
+            </Link>
             <Divider
               style={{
                 marginVertical: 10,
