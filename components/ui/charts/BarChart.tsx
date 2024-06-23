@@ -3,7 +3,11 @@ import { Divider, useTheme } from '@rneui/themed'
 import React from 'react'
 import { BarChart } from 'react-native-gifted-charts'
 
-const UIBarChart = () => {
+type UIBarChartProps = {
+  title?: string
+  data?: { value: number; label: string; frontColor?: string }[]
+}
+const UIBarChart = ({ title, data }: UIBarChartProps) => {
   const { theme } = useTheme()
   const barData = [
     { value: 250, label: 'M' },
@@ -27,7 +31,7 @@ const UIBarChart = () => {
           fontWeight: '700',
         }}
       >
-        Member Aktif
+        {title || 'Bar Chart'}
       </Text>
       <Divider
         style={{
@@ -40,7 +44,7 @@ const UIBarChart = () => {
         noOfSections={3}
         barBorderRadius={4}
         frontColor='lightgray'
-        data={barData}
+        data={data || barData}
         yAxisThickness={0}
         xAxisThickness={0}
         yAxisTextStyle={{
