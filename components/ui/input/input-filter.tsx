@@ -13,6 +13,7 @@ import React, { memo, useCallback, useMemo, useRef } from 'react'
 import { StyleSheet } from 'react-native'
 
 interface InputFilterProps {
+  placeholder?: string
   onScrollTo?: () => void
   filters: Filters[]
   search?: string
@@ -22,6 +23,7 @@ interface InputFilterProps {
 }
 
 const InputFilter = ({
+  placeholder,
   onScrollTo,
   filters,
   setFilters,
@@ -121,7 +123,7 @@ const InputFilter = ({
     <>
       <Input
         variant='filled'
-        placeholder='Cari Member'
+        placeholder={placeholder || 'Pencarian...'}
         onFocus={onScrollFocus}
         rightIcon={{
           name: 'tune',
