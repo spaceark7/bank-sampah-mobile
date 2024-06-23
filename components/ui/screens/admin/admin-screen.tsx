@@ -6,6 +6,7 @@ import MemberList from './members/member-list'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { useTheme } from '@rneui/themed'
 import { View } from '@/components/Themed'
+import MaterialList from './materials/material-screen'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -27,7 +28,7 @@ const AdminScreen = () => {
       >
         <Tab.Screen name='Transaksi' component={TransactionList} />
         <Tab.Screen name='Member' component={MemberList} />
-        <Tab.Screen name='Material' component={MemberList} />
+        <Tab.Screen name='Material' component={MaterialList} />
       </Tab.Navigator>
     </View>
   )
