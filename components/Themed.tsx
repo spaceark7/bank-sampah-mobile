@@ -92,7 +92,7 @@ function generateTextColor(variant: string) {
     case 'caption':
       return theme.mode === 'dark'
         ? theme.colors.shade400
-        : theme.colors.shade600
+        : theme.colors.shade500
     case 'overline':
       return theme.mode === 'dark'
         ? theme.colors.shade400
