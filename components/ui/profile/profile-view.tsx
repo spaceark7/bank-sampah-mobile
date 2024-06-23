@@ -3,11 +3,16 @@ import { SafeAreaView, ScrollView, StyleSheet } from 'react-native'
 import { Text, View } from '@/components/Themed'
 import DetailSection from '@/components/ui/profile/detail-section'
 import { UserEntity } from '@/services/users/user-entity'
-import { useGetUserDetailQuery } from '@/services/users/user-slices'
 import { useState } from 'react'
 import { useRouter } from 'expo-router'
 import { Avatar, Button, Divider, useTheme } from '@rneui/themed'
-import { useGetMemberByIdQuery } from '@/services/members/member-slices'
+import {
+  useDeactivateMemberMutation,
+  useGetMemberByIdQuery,
+} from '@/services/members/member-slices'
+import GlobalModalService from '../modal/global-modal'
+import { set } from 'react-hook-form'
+import useToast from '@/hooks/global-toast/useToast'
 
 interface ProfileViewProps {
   memberId: string
@@ -16,6 +21,7 @@ interface ProfileViewProps {
 export default function ProfileView({ memberId }: ProfileViewProps) {
   const [visible, setVisible] = useState<boolean>(false)
   const router = useRouter()
+  const { showToast } = useToast()
   const { theme } = useTheme()
   const {
     data: userDetail,
@@ -25,6 +31,7 @@ export default function ProfileView({ memberId }: ProfileViewProps) {
     isError,
   } = useGetMemberByIdQuery(memberId)
 
+  const [deactivateMember] = useDeactivateMemberMutation()
   const field = [
     {
       name: 'user_detail.first_name',
@@ -153,10 +160,38 @@ export default function ProfileView({ memberId }: ProfileViewProps) {
       pathname: '/edit-modal',
       params: {
         title: `Edit ${param}`,
+        memberId: memberId,
         name: param,
         segment: segment,
       },
     })
+  }
+
+  const onDeactivate = async () => {
+    try {
+      const result = await deactivateMember(memberId)
+        .unwrap()
+        .then((res) => res)
+
+      if (result.status) {
+        router.dismiss()
+        setVisible(false)
+        showToast({
+          message: 'Berhasil menon-aktifkan akun',
+          type: 'success',
+          position: 'bottom',
+        })
+      } else {
+        setVisible(false)
+        throw new Error('Gagal menon-aktifkan akun')
+      }
+    } catch (error) {
+      showToast({
+        message: 'Gagal menon-aktifkan akun',
+        type: 'error',
+        position: 'top',
+      })
+    }
   }
 
   return (
@@ -197,30 +232,38 @@ export default function ProfileView({ memberId }: ProfileViewProps) {
                 title='Informasi Pribadi'
                 data={userDetail.data}
                 field={field}
-                action={() => onEdit('Informasi Pribadi', 'profile')}
+                action={() => onEdit('Profile Member', 'profile-member')}
               />
 
               <DetailSection
-                title='Kewarganegaraan'
+                title='Identitas'
                 data={userDetail.data.user_detail}
                 field={field_detail}
-                action={() => onEdit('Kewarganegaraan', 'citizenship')}
+                action={() => onEdit('Identitas', 'citizenship-member')}
               />
             </>
           )}
           <View
             style={{
               backgroundColor: 'rgba(0,0,0,0)',
-              paddingVertical: 10,
+              padding: 10,
               marginTop: 20,
             }}
           >
-            <Button outlined color={'error'}>
-              Hapus Akun
+            <Button outlined color={'error'} onPress={() => setVisible(true)}>
+              Non-aktifkan akun
             </Button>
           </View>
         </View>
       </ScrollView>
+
+      <GlobalModalService
+        visible={visible}
+        onBackdropPress={() => setVisible(false)}
+        buttonTitle='Non-aktifkan'
+        action={onDeactivate}
+        title={`Yakin untuk menon-aktifkan akun ini? Semua transaksi akan dihapus.`}
+      ></GlobalModalService>
     </SafeAreaView>
   )
 }
