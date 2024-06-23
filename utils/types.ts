@@ -190,7 +190,7 @@ export const CurrencyFormatter = (
   locale: string = 'id-ID'
 ) => {
   if (!value) {
-    return '-'
+    return ''
   }
   return new Intl.NumberFormat(locale, {
     style: 'currency',
@@ -256,7 +256,7 @@ export const parseFilter = (filter: Filters[], key: string) => {
   if (!filter) return undefined
   const filterData = filter.find((item) => item.key === key)
   if (filterData) {
-   return filterData.value
+    return filterData.value
   } else {
     return undefined
   }
