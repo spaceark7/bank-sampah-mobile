@@ -29,18 +29,16 @@ export interface Citizenship {
   birth_date: Date
   gender: string
   marital_status: string
-  id_card_image_url: null
+  id_card_image_url?: string | null
 }
 
 export interface Address {
-  id: string
   address: string
   village: string
   district: string
   city: string
   province: string
   postal_code: string
-  citizen_id: string
 }
 
 export interface UserCreateParam {
@@ -56,7 +54,9 @@ export interface UserCreateParam {
   }
 }
 
-export interface UserAddIdentityParam extends Citizenship {}
+export interface UserAddIdentityParam extends Citizenship {
+  id: string
+}
 
 export interface UserUpdateParam {
   id: string
@@ -71,5 +71,5 @@ export interface UserUpdateParam {
 }
 export type MemberUpdateParam = Omit<
   UserUpdateParam,
-  'id' | 'password' | 'confirm_password'
+  'password' | 'confirm_password'
 >
