@@ -125,6 +125,7 @@ const BaseSelect = ({
         labelField='label'
         valueField='value'
         renderItem={SelectItem}
+        value={field.value}
         data={inputField.options}
         {...inputField.attr}
       />
