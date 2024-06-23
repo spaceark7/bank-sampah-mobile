@@ -13,6 +13,7 @@ import React, { useEffect } from 'react'
 import Toast from 'react-native-root-toast'
 import { Text, View } from '@/components/Themed'
 import { Button, Divider } from '@rneui/themed'
+import BaseInputCurrency from '../input/base-input-currency'
 
 interface DynamicFormProps {
   schema: yup.AnyObjectSchema
@@ -273,9 +274,12 @@ const RenderField = ({
           name={inputField.name}
           control={control}
           render={({ field, fieldState }) => (
-            <View>
-              <Text>Comp</Text>
-            </View>
+            <BaseInputCurrency
+              field={field}
+              fieldState={fieldState}
+              errors={errors}
+              inputField={inputField}
+            />
           )}
         />
       )
