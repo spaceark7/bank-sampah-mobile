@@ -18,7 +18,6 @@ import { useAppDispatch } from '@/store/hooks'
 import { Avatar, Button, Divider, Icon, useTheme } from '@rneui/themed'
 import { FlashList } from '@shopify/flash-list'
 import { Link, useRouter } from 'expo-router'
-import Toast from 'react-native-root-toast'
 
 const MemberList = () => {
   const { theme } = useTheme()
@@ -94,7 +93,7 @@ const MemberList = () => {
         showToast({
           message: 'Tidak ada data lagi',
           type: 'info',
-          position: Toast.positions.BOTTOM - 30,
+          position: 'bottom',
         })
       }
     }
@@ -115,7 +114,7 @@ const MemberList = () => {
       showToast({
         message: 'Tidak ada data lagi',
         type: 'info',
-        position: Toast.positions.BOTTOM - 30,
+        position: 'bottom',
       })
     }
   }
