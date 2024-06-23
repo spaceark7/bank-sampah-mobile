@@ -4,7 +4,7 @@ import DynamicForm from '../form/dynamic-form'
 import { UpdateUserSchema } from '@/utils/schemas/user-schema'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { formState, setFormState } from '@/store/slices/config-slices'
-import { useGetUserDetailQuery } from '@/services/users/user-slices'
+import { useGetUserDetailQuery, useUpdateAdminUserMutation } from '@/services/users/user-slices'
 import { Redirect, router } from 'expo-router'
 import { InferType } from 'yup'
 import useToast from '@/hooks/global-toast/useToast'
@@ -16,8 +16,8 @@ const EditForm = () => {
   const { showToast } = useToast()
   const dispatch = useAppDispatch()
   const { data: user, isLoading, isSuccess, isError } = useGetUserDetailQuery()
-  const [updateMember, { isLoading: isUpdateLoading }] =
-    useUpdateMemberMutation()
+  const [updateUser, { isLoading: isUpdateLoading }] =
+    useUpdateAdminUserMutation()
 
   //* Data
   const field = [
@@ -55,7 +55,8 @@ const EditForm = () => {
 
   const fnSubmit = async (data: InferType<typeof UpdateUserSchema>) => {
     try {
-      const result = await updateMember({
+      const result = await updateUser({
+        id: user?.id as string,
         user_detail: {
           first_name: data.user_detail.first_name,
           last_name: data.user_detail.last_name,
