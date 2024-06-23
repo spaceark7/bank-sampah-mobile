@@ -4,6 +4,7 @@ import { InferType } from 'yup'
 import { UserCitizenSchema } from '@/utils/schemas/user-schema'
 import {
   MemberUpdateParam,
+  UserAddIdentityParam,
   UserCreateParam,
   UserEntity,
 } from '../users/user-entity'
@@ -94,15 +95,18 @@ export const MemberApiSlice = apiSlice.injectEndpoints({
         return response as ErrorResponse
       },
     }),
-    updateMember: builder.mutation<UserEntity, MemberUpdateParam>({
+    updateMember: builder.mutation<
+      ResponseEntity<UserEntity>,
+      MemberUpdateParam
+    >({
       query: (params) => ({
-        url: `users`,
+        url: `members/${params.id}`,
         method: 'PUT',
         body: params,
       }),
-      invalidatesTags: (result) => ['User'],
+      invalidatesTags: (result) => ['Member'],
       transformResponse: (response: ResponseEntity<UserEntity>) => {
-        return response.data
+        return response
       },
       transformErrorResponse: (response: { status: string | number }) => {
         return response as ErrorResponse
@@ -116,7 +120,7 @@ export const MemberApiSlice = apiSlice.injectEndpoints({
       }
     >({
       query: (params) => ({
-        url: `users/citizenship/${params.id}`,
+        url: `members/citizenship/${params.id}`,
         method: 'POST',
         body: params.data,
       }),
@@ -129,17 +133,30 @@ export const MemberApiSlice = apiSlice.injectEndpoints({
       },
     }),
     updateMemberIdentity: builder.mutation<
-      UserEntity,
-      InferType<typeof UserCitizenSchema>
+      ResponseEntity<UserEntity>,
+      UserAddIdentityParam
     >({
       query: (params) => ({
-        url: `users-citizenship`,
+        url: `members/citizenship/${params.id}`,
         method: 'PUT',
         body: params,
       }),
-      invalidatesTags: ['Member', 'User'],
+      invalidatesTags: ['Member'],
       transformResponse: (response: ResponseEntity<UserEntity>) => {
-        return response.data
+        return response
+      },
+      transformErrorResponse: (response: { status: string | number }) => {
+        return response as ErrorResponse
+      },
+    }),
+    deactivateMember: builder.mutation<ResponseEntity<UserEntity>, string>({
+      query: (id) => ({
+        url: `users/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Member'],
+      transformResponse: (response: ResponseEntity<UserEntity>) => {
+        return response
       },
       transformErrorResponse: (response: { status: string | number }) => {
         return response as ErrorResponse
@@ -154,5 +171,6 @@ export const {
   useUpdateMemberMutation,
   useAddMemberIdentityMutation,
   useUpdateMemberIdentityMutation,
+  useDeactivateMemberMutation,
   useGetAllMemberQuery,
 } = MemberApiSlice
