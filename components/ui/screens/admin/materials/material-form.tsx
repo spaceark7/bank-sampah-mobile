@@ -11,6 +11,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { View } from '@/components/Themed'
 import DynamicForm from '@/components/ui/form/dynamic-form'
 
+
 const MaterialForm = () => {
   const formStateRef = useAppSelector(formState)
   const { showToast } = useToast()
@@ -52,7 +53,7 @@ const MaterialForm = () => {
     //   // defaultValue: user?.phone_number,
     // },
   ]
-
+//#region methods
   const fnSubmit = async (data: InferType<typeof materialSchemaCreate>) => {
     try {
       const result = await createMaterial({
@@ -80,6 +81,7 @@ const MaterialForm = () => {
       )
     }
   }
+  //#endregion
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -106,7 +108,7 @@ const MaterialForm = () => {
             ...formStateRef,
             isLoading: isUpdateLoading,
           }}
-          submitText='Update Profile'
+          submitText='Tambah Material'
           fields={field}
           onSubmit={fnSubmit}
           onReject={(data) => {
@@ -120,10 +122,8 @@ const MaterialForm = () => {
 
 export default MaterialForm
 
-
 const styles = StyleSheet.create({
   container: {
     padding: 20,
   },
 })
-

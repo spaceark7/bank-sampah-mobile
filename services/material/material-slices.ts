@@ -1,5 +1,5 @@
 import { apiSlice } from '@/services/base-api/api'
-import { FilterParam, ResponseEntity, filterStatusParse } from '@/utils/types'
+import { FilterParam, ResponseEntity, filterStatusParse, queryFilterBuilder } from '@/utils/types'
 import { MaterialCreateParam, MaterialEntity } from './material-entity'
 
 export const MaterialApiSlice = apiSlice.injectEndpoints({
@@ -9,28 +9,7 @@ export const MaterialApiSlice = apiSlice.injectEndpoints({
       FilterParam | void
     >({
       query: (filter) => {
-        let query = `materials`
-        if (filter) {
-          query += `?${filter.limit ? `limit=${filter.limit}` : ''}${
-            filter.page ? `&page=${filter.page}` : ''
-          }${
-            filter.user_id ? `&user_id=${filter.user_id}` : ''
-          }${filterStatusParse({
-            filter: {
-              is_active: filter.is_active,
-            },
-          })}${filter.type ? `&type=${filter.type}` : ''}${
-            filter.search ? `&search=${filter.search}` : ''
-          }${
-            filter.date?.value
-              ? `&date=${new Date(
-                  filter.date.value
-                ).toLocaleDateString()}&arg_date=${filter.date.arg}`
-              : ''
-          }
-          `
-        }
-        return query
+        return filter ? queryFilterBuilder(filter, 'materials') : 'materials'
       },
       providesTags: (result) => {
         return result?.data.length

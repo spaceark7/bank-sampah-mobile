@@ -4,43 +4,46 @@ import { ActivityIndicator, Pressable, RefreshControl } from 'react-native'
 
 import { Text, View } from '@/components/Themed'
 import UIBarChart from '@/components/ui/charts/BarChart'
-import InputFilter from '@/components/ui/input/input-filter'
+
 import ListCardItem, { ListCard } from '@/components/ui/list-card/list-card'
 import useDebounceValue from '@/hooks/debounce/useDebounceValue'
 import useToast from '@/hooks/global-toast/useToast'
 import useRefreshScreen from '@/hooks/refresh-screen/useRefreshScreen'
-import { useAppDispatch } from '@/store/hooks'
-import { Avatar, Button, Divider, Icon, useTheme } from '@rneui/themed'
-import { FlashList } from '@shopify/flash-list'
-import { Link, useRouter } from 'expo-router'
+import { MaterialEntity } from '@/services/material/material-entity'
 import {
   MaterialApiSlice,
   useGetMaterialListQuery,
 } from '@/services/material/material-slices'
-import { MaterialEntity } from '@/services/material/material-entity'
+import { useAppDispatch } from '@/store/hooks'
+import { Button, Divider, Icon, useTheme } from '@rneui/themed'
+import { FlashList } from '@shopify/flash-list'
+import { Link, useRouter } from 'expo-router'
+import InputFilter from '@/components/ui/input/input-filter'
 const MaterialList = () => {
   const { theme } = useTheme()
   const ref = useRef<FlashList<MaterialEntity>>(null)
   const [filters, setFilters] = React.useState<Filters[]>([
     {
+      title: 'Pencarian',
       key: 'search',
       value: undefined,
       condition: 'contains',
     },
     {
+      title: 'Urutan',
       key: 'order',
       value: 'asc',
       condition: 'eq',
-    },
-    {
-      key: 'is_active',
-      value: undefined,
-      condition: 'eq',
-    },
-    {
-      key: 'status',
-      value: '',
-      condition: 'eq',
+      options: [
+        {
+          label: 'Naik',
+          value: 'asc',
+        },
+        {
+          label: 'Turun',
+          value: 'desc',
+        },
+      ],
     },
   ])
   const [search, setSearch] = React.useState('')
@@ -60,8 +63,6 @@ const MaterialList = () => {
       limit: limit,
       page: page,
       search: debounceValue,
-      is_active: parseFilter(filters, 'is_active'),
-      status: parseFilter(filters, 'status'),
       order: parseFilter(filters, 'order'),
     },
     {
@@ -81,43 +82,8 @@ const MaterialList = () => {
     state: { isFetching: materialFetching, isLoading: materialLoading },
   })
 
-  //* Methods
-  const onEndReached = () => {
-    console.log('end', materials?.meta?.totalPages, page)
-    if (!materials?.meta?.totalPages) refetch()
-    if (!materialFetching) {
-      if (materials?.meta?.totalPages && materials?.meta?.totalPages > page) {
-        setPage(page + 1)
-      } else {
-        showToast({
-          message: 'Tidak ada data lagi',
-          type: 'info',
-          position: 'bottom',
-        })
-      }
-    }
-  }
-  const focusToInputFilter = () => {
-    ref.current?.scrollToOffset({
-      offset: 380,
-      animated: true,
-    })
-  }
-
-  const onLoadMore = () => {
-    if (materials?.meta?.hasNextPage) {
-      setLimit(limit + 10)
-      // setPage(materials?.meta.currentPage + 1)
-    } else {
-      setVisible(false)
-      showToast({
-        message: 'Tidak ada data lagi',
-        type: 'info',
-        position: 'bottom',
-      })
-    }
-  }
-
+  //#region Render
+  //* Render
   const renderItem = useCallback(
     ({ item }: { item: MaterialEntity }) => (
       <Link
@@ -125,7 +91,7 @@ const MaterialList = () => {
           pathname: '/edit-modal',
           params: {
             materialId: item.id,
-            title: `Detail material`,
+            title: `Edit material`,
             segment: 'material-detail',
           },
         }}
@@ -256,29 +222,51 @@ const MaterialList = () => {
     }
   }, [materialSuccess, debounceValue, materialLoading, materials?.data.length])
 
+  //#endregion
+  //* Methods
+  const onEndReached = () => {
+    console.log('end', materials?.meta?.totalPages, page)
+    if (!materials?.meta?.totalPages) refetch()
+    if (!materialFetching) {
+      if (materials?.meta?.totalPages && materials?.meta?.totalPages > page) {
+        setPage(page + 1)
+      } else {
+        showToast({
+          message: 'Tidak ada data lagi',
+          type: 'info',
+          position: 'bottom',
+        })
+      }
+    }
+  }
+  const focusToInputFilter = () => {
+    ref.current?.scrollToOffset({
+      offset: 380,
+      animated: true,
+    })
+  }
+
+  const onLoadMore = () => {
+    if (materials?.meta?.hasNextPage) {
+      setLimit(limit + 10)
+      // setPage(materials?.meta.currentPage + 1)
+    } else {
+      setVisible(false)
+      showToast({
+        message: 'Tidak ada data lagi',
+        type: 'info',
+        position: 'bottom',
+      })
+    }
+  }
+
   const resetFilter = () => {
-    setFilters([
-      {
-        key: 'search',
-        value: undefined,
-        condition: 'contains',
-      },
-      {
-        key: 'order',
-        value: 'asc',
-        condition: 'eq',
-      },
-      {
-        key: 'is_active',
-        value: undefined,
-        condition: 'eq',
-      },
-      {
-        key: 'status',
-        value: '',
-        condition: 'eq',
-      },
-    ])
+    setFilters((prev) =>
+      prev.map((filter) => {
+        if (filter.key === 'order') return { ...filter, value: 'asc' }
+        else return { ...filter, value: undefined }
+      })
+    )
     setSearch('')
     setPage(1)
   }
