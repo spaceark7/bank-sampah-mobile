@@ -1,12 +1,12 @@
 import { Text } from '@/components/Themed'
 import {
   BottomSheetModal,
-  BottomSheetModalProvider,
   BottomSheetScrollView,
-  BottomSheetView,
+  BottomSheetView
 } from '@gorhom/bottom-sheet'
 import { useTheme } from '@rneui/themed'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import { BackHandler } from 'react-native'
 
 export interface GlobalBottomSheetProps {
   isVisible: boolean
@@ -31,6 +31,19 @@ const GlobalBottomSheet = ({
   useEffect(() => {
     handlePresentModalPress()
   }, [isVisible])
+
+  useEffect(() => {
+    const handleBackButton = () => {
+      bottomSheetModalRef.current?.close()
+      return true
+      // dismiss() returns true/false, it means there is any instance of Bottom Sheet visible on current screen.
+    }
+
+    BackHandler.addEventListener('hardwareBackPress', handleBackButton)
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButton)
+    }
+  }, [])
 
   const snapPoints = useMemo(() => ['50%', '90%'], [])
   return (
