@@ -28,6 +28,9 @@ export interface Meta {
   hasPreviousPage: boolean
 }
 export type Filters = {
+  title?: string
+  type?: 'checkbox' | 'radio'
+  options?: { label: string; value: string }[]
   value: string | undefined
   condition:
     | 'eq'
