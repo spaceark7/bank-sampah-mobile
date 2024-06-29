@@ -3,6 +3,7 @@ import EditForm from '@/components/ui/profile/EditForm'
 import EditMemberCitizenship from '@/components/ui/profile/edit-member-citizenship'
 import EditMemberForm from '@/components/ui/profile/edit-member-form'
 import ProfileView from '@/components/ui/profile/profile-view'
+import MaterialEditForm from '@/components/ui/screens/admin/materials/material-edit-form'
 import MaterialForm from '@/components/ui/screens/admin/materials/material-form'
 import MemberDetailAdmin from '@/components/ui/screens/admin/members/member-detail-admin'
 import RegisterMember from '@/components/ui/screens/admin/members/member-register'
@@ -32,6 +33,8 @@ const RenderScreen = ({
       return <RegisterMember {...props} />
     case 'add-material':
       return <MaterialForm {...props} />
+    case 'material-detail':
+      return <MaterialEditForm {...props} />
     default:
       return null
   }
