@@ -4,7 +4,6 @@ import { ActivityIndicator, Pressable, RefreshControl } from 'react-native'
 
 import { Text, View } from '@/components/Themed'
 import UIBarChart from '@/components/ui/charts/BarChart'
-import InputFilter from '@/components/ui/input/input-filter'
 import ListCardItem, { ListCard } from '@/components/ui/list-card/list-card'
 import useDebounceValue from '@/hooks/debounce/useDebounceValue'
 import useToast from '@/hooks/global-toast/useToast'
@@ -18,6 +17,7 @@ import { useAppDispatch } from '@/store/hooks'
 import { Avatar, Button, Divider, Icon, useTheme } from '@rneui/themed'
 import { FlashList } from '@shopify/flash-list'
 import { Link, useRouter } from 'expo-router'
+import InputFilter from '@/components/ui/input/input-filter'
 
 const MemberList = () => {
   const { theme } = useTheme()
@@ -29,18 +29,52 @@ const MemberList = () => {
       condition: 'contains',
     },
     {
+      title: 'Urutan',
       key: 'order',
       value: 'asc',
       condition: 'eq',
+      options: [
+        {
+          label: 'Naik',
+          value: 'asc',
+        },
+        {
+          label: 'Turun',
+          value: 'desc',
+        },
+      ],
     },
     {
+      title: 'Status',
+      options: [
+        {
+          label: 'Aktif',
+          value: '1',
+        },
+        {
+          label: 'Belum aktif',
+          value: '2',
+        },
+      ],
       key: 'is_active',
       value: undefined,
       condition: 'eq',
     },
     {
+      title: 'Jenis Kelamin',
+
       key: 'status',
       value: '',
+      options: [
+        {
+          label: 'Pria',
+          value: 'Male',
+        },
+        {
+          label: 'Wanita',
+          value: 'Female',
+        },
+      ],
       condition: 'eq',
     },
   ])
@@ -82,43 +116,7 @@ const MemberList = () => {
     state: { isFetching: memberFetching, isLoading: memberLoading },
   })
 
-  //* Methods
-  const onEndReached = () => {
-    console.log('end', members?.meta?.totalPages, page)
-    if (!members?.meta?.totalPages) refetch()
-    if (!memberFetching) {
-      if (members?.meta?.totalPages && members?.meta?.totalPages > page) {
-        setPage(page + 1)
-      } else {
-        showToast({
-          message: 'Tidak ada data lagi',
-          type: 'info',
-          position: 'bottom',
-        })
-      }
-    }
-  }
-  const focusToInputFilter = () => {
-    ref.current?.scrollToOffset({
-      offset: 380,
-      animated: true,
-    })
-  }
-
-  const onLoadMore = () => {
-    if (members?.meta?.hasNextPage) {
-      setLimit(limit + 10)
-      // setPage(members?.meta.currentPage + 1)
-    } else {
-      setVisible(false)
-      showToast({
-        message: 'Tidak ada data lagi',
-        type: 'info',
-        position: 'bottom',
-      })
-    }
-  }
-
+  //#region  Render
   const renderItem = useCallback(
     ({ item }: { item: UserEntity }) => (
       <Link
@@ -278,32 +276,58 @@ const MemberList = () => {
     }
   }, [memberSuccess, debounceValue, memberLoading, members?.data.length])
 
+  //#endregion
+
+  //#region Methods
+  //* Methods
+  const onEndReached = () => {
+    console.log('end', members?.meta?.totalPages, page)
+    if (!members?.meta?.totalPages) refetch()
+    if (!memberFetching) {
+      if (members?.meta?.totalPages && members?.meta?.totalPages > page) {
+        setPage(page + 1)
+      } else {
+        showToast({
+          message: 'Tidak ada data lagi',
+          type: 'info',
+          position: 'bottom',
+        })
+      }
+    }
+  }
+  const focusToInputFilter = () => {
+    ref.current?.scrollToOffset({
+      offset: 380,
+      animated: true,
+    })
+  }
+
+  const onLoadMore = () => {
+    if (members?.meta?.hasNextPage) {
+      setLimit(limit + 10)
+      // setPage(members?.meta.currentPage + 1)
+    } else {
+      setVisible(false)
+      showToast({
+        message: 'Tidak ada data lagi',
+        type: 'info',
+        position: 'bottom',
+      })
+    }
+  }
+
   const resetFilter = () => {
-    setFilters([
-      {
-        key: 'search',
-        value: undefined,
-        condition: 'contains',
-      },
-      {
-        key: 'order',
-        value: 'asc',
-        condition: 'eq',
-      },
-      {
-        key: 'is_active',
-        value: undefined,
-        condition: 'eq',
-      },
-      {
-        key: 'status',
-        value: '',
-        condition: 'eq',
-      },
-    ])
+    setFilters((prev) =>
+      prev.map((filter) => {
+        if (filter.key === 'order') return { ...filter, value: 'asc' }
+        else return { ...filter, value: undefined }
+      })
+    )
     setSearch('')
     setPage(1)
   }
+  //#endregion
+ 
   return (
     <>
       <FlashList

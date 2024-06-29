@@ -1,24 +1,22 @@
-import { ActivityIndicator, Pressable, StyleSheet } from 'react-native'
-import React, { useCallback, useMemo } from 'react'
 import { Text, View } from '@/components/Themed'
+import useToast from '@/hooks/global-toast/useToast'
+import useRefreshScreen from '@/hooks/refresh-screen/useRefreshScreen'
 import { useGetMemberByIdQuery } from '@/services/members/member-slices'
-import { Avatar, Button, Icon, useTheme } from '@rneui/themed'
-import { CurrencyFormatter, DateFormatter } from '@/utils/types'
 import {
   TransactionApiSlice,
   useGetTransactionListByMemberIdQuery,
 } from '@/services/transactions/transaction-slices'
-import useRefreshScreen from '@/hooks/refresh-screen/useRefreshScreen'
-import { useAppDispatch } from '@/store/hooks'
-import useToast from '@/hooks/global-toast/useToast'
-import Toast from 'react-native-root-toast'
-import { FlashList } from '@shopify/flash-list'
-import { RefreshControl } from 'react-native-gesture-handler'
-import InputFilter from '../../../input/input-filter'
 import { TransactionEntity } from '@/services/transactions/transactions-entities'
-import { Link } from 'expo-router'
-import TransactionItem from '../../../transaction/transaction-item'
+import { useAppDispatch } from '@/store/hooks'
+import { CurrencyFormatter, DateFormatter } from '@/utils/types'
 import { Divider } from '@rneui/base'
+import { Avatar, Button, Icon, useTheme } from '@rneui/themed'
+import { FlashList } from '@shopify/flash-list'
+import { Link } from 'expo-router'
+import React, { useCallback, useMemo } from 'react'
+import { ActivityIndicator, Pressable, StyleSheet } from 'react-native'
+import { RefreshControl } from 'react-native-gesture-handler'
+import TransactionItem from '../../../transaction/transaction-item'
 
 type MemberDetailAdminProps = {
   memberId?: string
@@ -92,7 +90,7 @@ const MemberDetailAdmin = ({
       showToast({
         message: 'Tidak ada data lagi',
         type: 'info',
-        position: Toast.positions.BOTTOM - 30,
+        position: 'bottom',
       })
     }
   }
@@ -109,7 +107,7 @@ const MemberDetailAdmin = ({
         showToast({
           message: 'Tidak ada data lagi',
           type: 'info',
-          position: Toast.positions.BOTTOM - 30,
+          position: 'bottom',
         })
       }
     }
@@ -215,7 +213,8 @@ const MemberDetailAdmin = ({
                     marginBottom: 4,
                   }}
                 >
-                  {member.data.user_detail.first_name} {member.data.user_detail.last_name}
+                  {member.data.user_detail.first_name}{' '}
+                  {member.data.user_detail.last_name}
                 </Text>
                 <Text variants='caption'>Telah menjadi member sejak</Text>
                 <Text variants='caption'>
@@ -247,7 +246,9 @@ const MemberDetailAdmin = ({
                 <Text variants='h6'>Saldo</Text>
               </View>
               <Text variants='h1'>
-                {CurrencyFormatter(member.data.user_detail.balance?.balance_amount)}
+                {CurrencyFormatter(
+                  member.data.user_detail.balance?.balance_amount
+                )}
               </Text>
 
               <Text
