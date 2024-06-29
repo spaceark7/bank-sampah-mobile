@@ -369,7 +369,7 @@ export const rnuiTheme = createTheme({
 
           color:
             theme.mode === 'dark'
-              ? theme.colors.shade100
+              ? theme.colors.shade200
               : theme.colors.shade700,
           fontSize: 16,
           lineHeight: 24,
