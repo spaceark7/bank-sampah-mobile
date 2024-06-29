@@ -19,7 +19,7 @@ const useToast = () => {
       duration: Toast.durations.LONG,
       backgroundColor:
         type === 'success'
-          ? theme.colors.successMessageBg
+          ? theme.colors.primary
           : type === 'error'
           ? theme.colors.dangerMessageBg
           : type === 'warning'
@@ -29,7 +29,7 @@ const useToast = () => {
           : theme.colors.background,
       textColor:
         type === 'success'
-          ? theme.colors.successTextColor
+          ? theme.colors.textColor
           : type === 'error'
           ? theme.colors.dangerTextColor
           : type === 'warning'
