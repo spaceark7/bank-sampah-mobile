@@ -1,9 +1,17 @@
-import { Filters, parseFilter } from '@/utils/types'
+import { Filters } from '@/utils/types'
 import React, { useCallback, useMemo, useRef } from 'react'
-import { ActivityIndicator, Pressable, RefreshControl } from 'react-native'
+import {
+  ActivityIndicator,
+  View as IView,
+  Pressable,
+  RefreshControl,
+  TouchableWithoutFeedback,
+} from 'react-native'
 
 import { Text, View } from '@/components/Themed'
 import UIBarChart from '@/components/ui/charts/BarChart'
+import ContentLoader from '@/components/ui/content-loader/ContentLoader'
+import InputFilter from '@/components/ui/input/input-filter'
 import ListCardItem, { ListCard } from '@/components/ui/list-card/list-card'
 import useDebounceValue from '@/hooks/debounce/useDebounceValue'
 import useToast from '@/hooks/global-toast/useToast'
@@ -14,10 +22,17 @@ import {
 } from '@/services/members/member-slices'
 import { UserEntity } from '@/services/users/user-entity'
 import { useAppDispatch } from '@/store/hooks'
-import { Avatar, Button, Divider, Icon, useTheme } from '@rneui/themed'
+import { parseFilter } from '@/utils/helpers/Functions'
+import {
+  Avatar,
+  Button,
+  ButtonProps,
+  Divider,
+  Icon,
+  useTheme,
+} from '@rneui/themed'
 import { FlashList } from '@shopify/flash-list'
 import { Link, useRouter } from 'expo-router'
-import InputFilter from '@/components/ui/input/input-filter'
 
 const MemberList = () => {
   const { theme } = useTheme()
@@ -32,6 +47,7 @@ const MemberList = () => {
       title: 'Urutan',
       key: 'order',
       value: 'asc',
+      type: 'radio',
       condition: 'eq',
       options: [
         {
@@ -46,6 +62,8 @@ const MemberList = () => {
     },
     {
       title: 'Status',
+      type: 'radio',
+
       options: [
         {
           label: 'Aktif',
@@ -57,11 +75,12 @@ const MemberList = () => {
         },
       ],
       key: 'is_active',
-      value: undefined,
+      value: '1',
       condition: 'eq',
     },
     {
       title: 'Jenis Kelamin',
+      type: 'radio',
 
       key: 'status',
       value: '',
@@ -205,7 +224,9 @@ const MemberList = () => {
   )
 
   const ListHeaderComponent = useMemo(() => {
-    return (
+    return memberLoading ? (
+      <ContentLoader isLoading={memberLoading} length={1} height={200} />
+    ) : (
       <View
         style={{
           paddingBottom: 10,
@@ -227,15 +248,7 @@ const MemberList = () => {
           }}
           asChild
         >
-          <Button
-            size='md'
-            icon={{
-              name: 'account-plus-outline',
-              type: 'material-community',
-            }}
-          >
-            Tambah Member
-          </Button>
+          <ActionButton />
         </Link>
         <Divider
           style={{
@@ -254,7 +267,7 @@ const MemberList = () => {
         />
       </View>
     )
-  }, [filters, search, setSearch, setFilters])
+  }, [filters, search, setSearch, setFilters, memberLoading])
 
   const ListEmptyComponent = useMemo(() => {
     if (!memberSuccess && memberLoading) {
@@ -327,7 +340,7 @@ const MemberList = () => {
     setPage(1)
   }
   //#endregion
- 
+
   return (
     <>
       <FlashList
@@ -456,6 +469,29 @@ const StatusIcon = ({ status }: { status: boolean }) => {
     </View>
   )
 }
+
+const ActionButton = React.forwardRef<IView, ButtonProps>((props, ref: any) => {
+  return (
+    <Pressable
+      ref={ref}
+      style={{
+        flex: 1,
+      }}
+    >
+      <Button
+        TouchableComponent={TouchableWithoutFeedback}
+        size='md'
+        icon={{
+          name: 'account-plus-outline',
+          type: 'material-community',
+        }}
+        {...props}
+      >
+        Tambah Member
+      </Button>
+    </Pressable>
+  )
+})
 
 export default MemberList
 {

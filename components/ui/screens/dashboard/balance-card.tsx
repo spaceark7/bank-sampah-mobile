@@ -1,8 +1,8 @@
 import { View, Text as TextNative } from 'react-native'
 import React from 'react'
-import { CurrencyFormatter } from '@/utils/types'
 import { Text } from '@/components/Themed'
 import { Button } from '@rneui/themed'
+import { CurrencyFormatter } from '@/utils/helpers/Functions'
 
 const BalanceCard = () => {
   const [visible, setVisible] = React.useState(false)

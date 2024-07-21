@@ -1,4 +1,4 @@
-import { Filters, parseFilter } from '@/utils/types'
+import { Filters } from '@/utils/types'
 import React, { useCallback, useMemo, useRef } from 'react'
 import { ActivityIndicator, Pressable, RefreshControl } from 'react-native'
 
@@ -18,6 +18,7 @@ import { Avatar, Button, Divider, Icon, useTheme } from '@rneui/themed'
 import { FlashList } from '@shopify/flash-list'
 import { Link, useRouter } from 'expo-router'
 import InputFilter from '@/components/ui/input/input-filter'
+import { parseFilter } from '@/utils/helpers/Functions'
 
 
 

@@ -1,4 +1,4 @@
-import { CurrencyFormatter, Filters, parseFilter } from '@/utils/types'
+import { Filters } from '@/utils/types'
 import React, { useCallback, useMemo, useRef } from 'react'
 import { ActivityIndicator, Pressable, RefreshControl } from 'react-native'
 
@@ -19,6 +19,8 @@ import { Button, Divider, Icon, useTheme } from '@rneui/themed'
 import { FlashList } from '@shopify/flash-list'
 import { Link, useRouter } from 'expo-router'
 import InputFilter from '@/components/ui/input/input-filter'
+import { CurrencyFormatter, parseFilter } from '@/utils/helpers/Functions'
+
 const MaterialList = () => {
   const { theme } = useTheme()
   const ref = useRef<FlashList<MaterialEntity>>(null)
@@ -173,15 +175,17 @@ const MaterialList = () => {
           }}
           asChild
         >
-          <Button
-            size='md'
-            icon={{
-              name: 'plus',
-              type: 'material-community',
-            }}
-          >
-            Tambah material
-          </Button>
+          <Pressable>
+            <Button
+              size='md'
+              icon={{
+                name: 'plus',
+                type: 'material-community',
+              }}
+            >
+              Tambah material
+            </Button>
+          </Pressable>
         </Link>
         <Divider
           style={{

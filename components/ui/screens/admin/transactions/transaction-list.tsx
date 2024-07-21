@@ -11,7 +11,9 @@ import {
 } from '@/services/transactions/transaction-slices'
 import { TransactionEntity } from '@/services/transactions/transactions-entities'
 import { useAppDispatch } from '@/store/hooks'
-import { DateFormatter, Filters } from '@/utils/types'
+import EFilterOptions from '@/utils/helpers/Filters'
+import { DateFormatter, parseFilter } from '@/utils/helpers/Functions'
+import { Filters } from '@/utils/types'
 import { Button, Divider, useTheme } from '@rneui/themed'
 import { FlashList } from '@shopify/flash-list'
 import { Link, useRouter } from 'expo-router'
@@ -25,55 +27,32 @@ export default function TransactionList() {
     {
       key: 'search',
       value: undefined,
+
       condition: 'contains',
     },
     {
       title: 'Urutan',
       key: 'order',
       value: 'asc',
+      type: 'radio',
       condition: 'eq',
-      options: [
-        {
-          label: 'Naik',
-          value: 'asc',
-        },
-        {
-          label: 'Turun',
-          value: 'desc',
-        },
-      ],
+      options: EFilterOptions.order,
     },
-    {
-      title: 'Status',
-      options: [
-        {
-          label: 'Aktif',
-          value: '1',
-        },
-        {
-          label: 'Belum aktif',
-          value: '2',
-        },
-      ],
-      key: 'is_active',
-      value: undefined,
-      condition: 'eq',
-    },
-    {
-      title: 'Jenis Kelamin',
 
-      key: 'status',
+    {
+      title: 'Tanggal',
+      key: 'date',
       value: '',
-      options: [
-        {
-          label: 'Pria',
-          value: 'Male',
-        },
-        {
-          label: 'Wanita',
-          value: 'Female',
-        },
-      ],
+      type: 'date',
+      condition: 'eq',
+    },
+    {
+      title: 'Jenis Transaksi',
+      key: 'type',
+      value: '',
+      type: 'radio',
+
+      options: EFilterOptions.transaction,
       condition: 'eq',
     },
   ])
@@ -89,9 +68,21 @@ export default function TransactionList() {
     isFetching,
     isSuccess,
     refetch,
-  } = useGetTransactionsListQuery({
-    order: 'asc',
-  })
+  } = useGetTransactionsListQuery(
+    {
+      limit: limit,
+      page: page,
+      search: debounceValue,
+      order: parseFilter(filters, 'order'),
+      filter: parseFilter(filters, 'date'),
+      type: parseFilter(filters, 'type'),
+    },
+    {
+      skip: !page,
+
+      refetchOnMountOrArgChange: true,
+    }
+  )
 
   const { showToast } = useToast()
   const router = useRouter()
@@ -128,9 +119,10 @@ export default function TransactionList() {
             title={
               item.user_detail.first_name + ' ' + item.user_detail.last_name
             }
-            description={`${DateFormatter(item.created_at)} | ${
-              item.transaction_status
-            }`}
+            description={`${DateFormatter(item.created_at)}`}
+            status={{
+              text: item.transaction_status,
+            }}
             type={item.transaction_type}
             amount={item.transaction_detail.reduce(
               (acc, curr) => acc + curr.transaction_amount,

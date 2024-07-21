@@ -7,23 +7,15 @@ import {
 
 import CardList from '@/components/ui/screens/dashboard/admin/card-list'
 import TransactionItem from '@/components/ui/transaction/transaction-item'
-import { DateFormatter } from '@/utils/types'
 
 import ListCardItem from '@/components/ui/list-card/list-card'
-import React from 'react'
 import { useGetAdminDashboardQuery } from '@/services/dashboard/dashboard-slices'
+import React from 'react'
 
-import {
-  Avatar,
-  Button,
-  Divider,
-  Icon,
-  Skeleton,
-  useTheme,
-} from '@rneui/themed'
 import { Text, View } from '@/components/Themed'
-import { LinearGradient } from 'expo-linear-gradient'
 import ContentLoader from '@/components/ui/content-loader/ContentLoader'
+import { Avatar, Button, Divider, Icon, useTheme } from '@rneui/themed'
+import { DateFormatter } from '@/utils/helpers/Functions'
 
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = React.useState(false)

@@ -8,7 +8,6 @@ import {
 } from '@/services/transactions/transaction-slices'
 import { TransactionEntity } from '@/services/transactions/transactions-entities'
 import { useAppDispatch } from '@/store/hooks'
-import { CurrencyFormatter, DateFormatter } from '@/utils/types'
 import { Divider } from '@rneui/base'
 import { Avatar, Button, Icon, useTheme } from '@rneui/themed'
 import { FlashList } from '@shopify/flash-list'
@@ -17,6 +16,7 @@ import React, { useCallback, useMemo } from 'react'
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native'
 import { RefreshControl } from 'react-native-gesture-handler'
 import TransactionItem from '../../../transaction/transaction-item'
+import { CurrencyFormatter, DateFormatter } from '@/utils/helpers/Functions'
 
 type MemberDetailAdminProps = {
   memberId?: string
