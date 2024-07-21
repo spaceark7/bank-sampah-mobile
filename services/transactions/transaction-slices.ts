@@ -2,10 +2,10 @@ import {
   DataListResponse,
   ErrorResponse,
   FilterParam,
-  queryFilterBuilder,
 } from '@/utils/types'
 import { apiSlice } from '../base-api/api'
 import { TransactionEntity } from './transactions-entities'
+import { queryFilterBuilder } from '@/utils/helpers/Functions'
 
 export const TransactionApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -26,21 +26,23 @@ export const TransactionApiSlice = apiSlice.injectEndpoints({
           : 'transactions'
       },
       serializeQueryArgs: ({ endpointName }) => endpointName,
-      merge: (currentCacheData, newData) => {
-        newData.data.forEach((item) => {
-          const alreadyExist = currentCacheData.data.find(
-            (i) => i.id === item.id
-          )
+      merge: (currentCache, newData) => {
+        // newData.data.forEach((item) => {
+        //   const alreadyExist = currentCacheData.data.find(
+        //     (i) => i.id === item.id
+        //   )
 
-          if (alreadyExist) {
-            return
-          } else {
-            currentCacheData.data.push(item)
-          }
-        })
+        //   if (alreadyExist) {
+        //     return
+        //   } else {
+        //     currentCacheData.data.push(item)
+        //   }
+        // })
+          currentCache.data = newData.data
+          currentCache.meta = newData.meta
       },
       forceRefetch({ currentArg, previousArg }) {
-        return currentArg !== previousArg
+        return currentArg?.page !== previousArg?.page
       },
       providesTags: (result) =>
         result?.data.length
