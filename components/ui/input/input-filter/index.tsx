@@ -220,10 +220,15 @@ const InputFilter = ({
                 marginVertical: 8,
               }}
             />
-            <RenderInputFilter
-              filters={filters}
-              handleFilterPress={handleFilterPress}
-            />
+
+            {filters.map((filter) => (
+              <RenderInputFilter
+                key={filter.key}
+                filter={filter}
+                handleFilterPress={handleFilterPress}
+              />
+            ))}
+
             {/* <View
               style={{
                 backgroundColor:

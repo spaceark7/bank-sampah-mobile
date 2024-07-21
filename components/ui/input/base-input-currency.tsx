@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 
+import getFormErrorMessage from '@/components/ErrorTextMessage'
+import { Input, useTheme } from '@rneui/themed'
 import {
   ControllerFieldState,
   ControllerRenderProps,
@@ -7,12 +9,8 @@ import {
   FieldValues,
 } from 'react-hook-form'
 import { TextInputProps, View } from 'react-native'
-import getFormErrorMessage from '@/components/ErrorTextMessage'
-import { Input } from '@rneui/themed'
-import { Text } from '@/components/Themed'
-import { useTheme } from '@rneui/themed'
-import { CurrencyFormatter } from '@/utils/types'
-
+import { CurrencyFormatter } from '@/utils/helpers/Functions'
+         
 interface BaseInputCurrencyProps extends TextInputProps {
   field: ControllerRenderProps<FieldValues, any>
   fieldState: ControllerFieldState

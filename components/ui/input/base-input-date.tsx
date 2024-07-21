@@ -1,19 +1,19 @@
-import React, { useCallback } from 'react'
 import {
   BaseProps,
   DateTimePickerAndroid,
 } from '@react-native-community/datetimepicker'
+import React, { useCallback } from 'react'
 
+import getFormErrorMessage from '@/components/ErrorTextMessage'
+import { View } from '@/components/Themed'
+import { DateFormatter } from '@/utils/helpers/Functions'
+import { Input } from '@rneui/themed'
 import {
   ControllerFieldState,
   ControllerRenderProps,
   FieldErrors,
   FieldValues,
 } from 'react-hook-form'
-import getFormErrorMessage from '@/components/ErrorTextMessage'
-import { View } from '@/components/Themed'
-import { Input } from '@rneui/themed'
-import { DateFormatter } from '@/utils/types'
 
 interface BaseInputDateProps extends BaseProps {
   field: ControllerRenderProps<FieldValues, any>
