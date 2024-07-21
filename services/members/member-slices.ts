@@ -13,8 +13,8 @@ import {
   ErrorResponse,
   FilterParam,
   ResponseEntity,
-  queryFilterBuilder,
 } from '@/utils/types'
+import { queryFilterBuilder } from '@/utils/helpers/Functions'
 
 export const MemberApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -77,6 +77,7 @@ export const MemberApiSlice = apiSlice.injectEndpoints({
       },
       // Refetch when the page arg changes
       forceRefetch({ currentArg, previousArg }) {
+        console.log('forceRefetch', currentArg, previousArg)
         return currentArg?.page !== previousArg?.page
       },
       // providesTags: ['Member'],

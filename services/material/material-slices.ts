@@ -1,6 +1,7 @@
 import { apiSlice } from '@/services/base-api/api'
-import { FilterParam, ResponseEntity, filterStatusParse, queryFilterBuilder } from '@/utils/types'
+import { FilterParam, ResponseEntity } from '@/utils/types'
 import { MaterialCreateParam, MaterialEntity } from './material-entity'
+import { queryFilterBuilder } from '@/utils/helpers/Functions'
 
 export const MaterialApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
