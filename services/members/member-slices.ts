@@ -4,6 +4,7 @@ import { InferType } from 'yup'
 import { UserCitizenSchema } from '@/utils/schemas/user-schema'
 import {
   MemberUpdateParam,
+  UserAddIdentityParam,
   UserCreateParam,
   UserEntity,
 } from '../users/user-entity'
@@ -12,8 +13,8 @@ import {
   ErrorResponse,
   FilterParam,
   ResponseEntity,
-  queryFilterBuilder,
 } from '@/utils/types'
+import { queryFilterBuilder } from '@/utils/helpers/Functions'
 
 export const MemberApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -21,15 +22,28 @@ export const MemberApiSlice = apiSlice.injectEndpoints({
      * Member Related
      * @spaceark7
      */
-    createMember: builder.mutation<UserEntity, UserCreateParam>({
-      query: (params) => ({
-        url: `register`,
-        method: 'POST',
-        body: params,
-      }),
-      invalidatesTags: ['Member'],
+    createMember: builder.mutation<ResponseEntity<UserEntity>, UserCreateParam>(
+      {
+        query: (params) => ({
+          url: `register`,
+          method: 'POST',
+          body: params,
+        }),
+        invalidatesTags: ['Member'],
+        transformResponse: (response: ResponseEntity<UserEntity>) => {
+          return response
+        },
+        transformErrorResponse: (response: { status: string | number }) => {
+          console.log('transformErrorResponse', response)
+          return response as ErrorResponse
+        },
+      }
+    ),
+    getMemberById: builder.query<ResponseEntity<UserEntity>, string>({
+      query: (id) => `members/${id}`,
+      providesTags: (result, error, id) => [{ type: 'Member', id }],
       transformResponse: (response: ResponseEntity<UserEntity>) => {
-        return response.data
+        return response
       },
       transformErrorResponse: (response: { status: string | number }) => {
         return response as ErrorResponse
@@ -63,70 +77,87 @@ export const MemberApiSlice = apiSlice.injectEndpoints({
       },
       // Refetch when the page arg changes
       forceRefetch({ currentArg, previousArg }) {
+        console.log('forceRefetch', currentArg, previousArg)
         return currentArg?.page !== previousArg?.page
       },
-      providesTags: ['Member'],
-      // providesTags: (result) => {
-      //   return result?.data
-      //     ? [
-      //         ...result.data.map(({ id }) => ({
-      //           type: 'Member' as const,
-      //           id: id,
-      //         })),
-      //         { type: 'Member', id: 'LIST' },
-      //       ]
-      //     : [{ type: 'Member', id: 'LIST' }]
-      // },
+      // providesTags: ['Member'],
+      providesTags: (result) => {
+        return result?.data
+          ? [
+              ...result.data.map(({ id }) => ({
+                type: 'Member' as const,
+                id: id,
+              })),
+              { type: 'Member', id: 'LIST' },
+            ]
+          : [{ type: 'Member', id: 'LIST' }]
+      },
       transformErrorResponse: (response: { status: string | number }) => {
         return response as ErrorResponse
       },
     }),
-    updateMember: builder.mutation<UserEntity, MemberUpdateParam>({
+    updateMember: builder.mutation<
+      ResponseEntity<UserEntity>,
+      MemberUpdateParam
+    >({
       query: (params) => ({
-        url: `users`,
+        url: `members/${params.id}`,
         method: 'PUT',
         body: params,
       }),
-      invalidatesTags: (result) => ['User'],
+      invalidatesTags: (result) => ['Member'],
       transformResponse: (response: ResponseEntity<UserEntity>) => {
-        return response.data
+        return response
       },
       transformErrorResponse: (response: { status: string | number }) => {
         return response as ErrorResponse
       },
     }),
     addMemberIdentity: builder.mutation<
-      UserEntity,
+      ResponseEntity<UserEntity>,
       {
         id: string
         data: InferType<typeof UserCitizenSchema>
       }
     >({
       query: (params) => ({
-        url: `users-citizenship/${params.id}`,
+        url: `members/citizenship/${params.id}`,
         method: 'POST',
         body: params.data,
       }),
       invalidatesTags: ['Member'],
       transformResponse: (response: ResponseEntity<UserEntity>) => {
-        return response.data
+        return response
       },
       transformErrorResponse: (response: { status: string | number }) => {
         return response as ErrorResponse
       },
     }),
     updateMemberIdentity: builder.mutation<
-      UserEntity,
-      InferType<typeof UserCitizenSchema>
+      ResponseEntity<UserEntity>,
+      UserAddIdentityParam
     >({
       query: (params) => ({
-        url: `users-citizenship`,
+        url: `members/citizenship/${params.id}`,
         method: 'PUT',
         body: params,
       }),
-      invalidatesTags: ['Member', 'User'],
+      invalidatesTags: ['Member'],
       transformResponse: (response: ResponseEntity<UserEntity>) => {
-        return response.data
+        return response
+      },
+      transformErrorResponse: (response: { status: string | number }) => {
+        return response as ErrorResponse
+      },
+    }),
+    deactivateMember: builder.mutation<ResponseEntity<UserEntity>, string>({
+      query: (id) => ({
+        url: `users/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Member'],
+      transformResponse: (response: ResponseEntity<UserEntity>) => {
+        return response
       },
       transformErrorResponse: (response: { status: string | number }) => {
         return response as ErrorResponse
@@ -137,8 +168,10 @@ export const MemberApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useCreateMemberMutation,
+  useGetMemberByIdQuery,
   useUpdateMemberMutation,
   useAddMemberIdentityMutation,
   useUpdateMemberIdentityMutation,
+  useDeactivateMemberMutation,
   useGetAllMemberQuery,
 } = MemberApiSlice

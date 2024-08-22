@@ -23,6 +23,7 @@ interface ConfigState {
     severity?: 'success' | 'info' | 'warn' | 'error' | undefined
     summary: string
     detail: string
+    position?: 'top' | 'bottom'
   }
   err_message: errMessage
 }
@@ -41,6 +42,7 @@ const initialState: ConfigState = {
     severity: undefined,
     summary: '',
     detail: '',
+    position: 'bottom',
   },
   err_message: {
     message: '',
@@ -65,16 +67,26 @@ const configSlice = createSlice({
     resetFormState: (state) => {
       state.formState = {
         status: 'initial',
+        message: '',
       }
     },
     showToast: (
       state,
       action: PayloadAction<{
         message: string
+        type?: 'success' | 'info' | 'warn' | 'error' | undefined
+        summary?: string
+        position?: 'top' | 'bottom'
       }>
     ) => {
       console.log('showToast', action.payload)
       state.toast_open = true
+      state.toast_detail = {
+        severity: !action.payload.type ? 'info' : action.payload.type,
+        summary: action.payload.summary || action.payload.type || 'Info',
+        detail: action.payload.message,
+        position: action.payload.position || 'bottom',
+      }
       state.toast = {
         isOpen: true,
         message: action.payload.message,
@@ -121,7 +133,6 @@ export const {
   hideErrorMessage,
   resetFormState,
   setFormState,
-
   resetToast,
 } = configSlice.actions
 export default configSlice.reducer

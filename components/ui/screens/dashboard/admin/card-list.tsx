@@ -5,7 +5,7 @@ import { useGetAdminDashboardQuery } from '@/services/dashboard/dashboard-slices
 // import SkeletonContent from '@alanantar_sb/react-native-skeleton-content'
 import { Icon } from '@rneui/themed'
 import { View } from '@/components/Themed'
-import ContentLoader from '../../content-loader/ContentLoader'
+import ContentLoader from '@/components/ui/content-loader/ContentLoader'
 
 interface CardListProps {
   data: any

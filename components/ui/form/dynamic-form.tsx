@@ -9,10 +9,11 @@ import { useAppDispatch } from '@/store/hooks'
 import { resetFormState, setFormState } from '@/store/slices/config-slices'
 import BaseSelect from '../input/base-select'
 import BaseInputDate from '../input/base-input-date'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Toast from 'react-native-root-toast'
 import { Text, View } from '@/components/Themed'
 import { Button, Divider } from '@rneui/themed'
+import BaseInputCurrency from '../input/base-input-currency'
 
 interface DynamicFormProps {
   schema: yup.AnyObjectSchema
@@ -34,12 +35,31 @@ const DynamicForm: React.FC<DynamicFormProps> = (props) => {
   } = useForm({
     resolver: yupResolver(props.schema),
     defaultValues: props.fields.reduce((acc: any, field: any) => {
-      acc[field.name] = field.defaultValue || ''
-      return acc
+      if (field.name && field.name.includes('.')) {
+        const setValue = (obj: any, path: any, value: any) => {
+          const keys = path.split('.')
+          const lastKey = keys.pop()
+          const lastObj = keys.reduce(
+            (o: any, key: any) => (o[key] = o[key] || {}),
+            obj
+          )
+          lastObj[lastKey] = value
+        }
+
+        setValue(acc, field.name, field.defaultValue || '')
+        return acc
+      } else {
+        acc[field.name] = field.defaultValue || ''
+        return acc
+      }
     }, {}),
+    // defaultValues: props.fields.reduce((acc: any, field: any) => {
+    //   acc[field.name] = field.defaultValue || ''
+    //   return acc
+    // }, {}),
   })
 
-  const scrollRef = React.useRef(null)
+  const scrollRef = React.useRef<ScrollView>(null)
 
   const dispatch = useAppDispatch()
 
@@ -82,6 +102,20 @@ const DynamicForm: React.FC<DynamicFormProps> = (props) => {
       props.onReject(error)
     }
   )
+
+  useEffect(() => {
+    if (props.formState.status === 'success') {
+      reset()
+    }
+    if (props.formState.status === 'error') {
+      scrollRef.current &&
+        scrollRef.current.scrollTo({
+          x: 0,
+          y: 0,
+          animated: true,
+        })
+    }
+  }, [props.formState])
 
   return (
     <ScrollView ref={scrollRef}>
@@ -240,9 +274,12 @@ const RenderField = ({
           name={inputField.name}
           control={control}
           render={({ field, fieldState }) => (
-            <View>
-              <Text>Comp</Text>
-            </View>
+            <BaseInputCurrency
+              field={field}
+              fieldState={fieldState}
+              errors={errors}
+              inputField={inputField}
+            />
           )}
         />
       )

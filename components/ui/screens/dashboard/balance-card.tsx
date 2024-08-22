@@ -1,7 +1,8 @@
 import { View, Text as TextNative } from 'react-native'
 import React from 'react'
-import { CurrencyFormatter } from '@/utils/types'
-import { Button, Text } from '@ui-kitten/components'
+import { Text } from '@/components/Themed'
+import { Button } from '@rneui/themed'
+import { CurrencyFormatter } from '@/utils/helpers/Functions'
 
 const BalanceCard = () => {
   const [visible, setVisible] = React.useState(false)
@@ -12,11 +13,10 @@ const BalanceCard = () => {
       }}
     >
       <Text
-        appearance='hint'
+        variants='h6'
         style={{
           fontWeight: 'bold',
         }}
-        category='s1'
       >
         Saldo anda
       </Text>
@@ -41,9 +41,8 @@ const BalanceCard = () => {
             width: 50,
             height: 50,
           }}
-          size='large'
-          appearance='ghost'
-          status='primary'
+          size='lg'
+          text
           onPress={() => setVisible(!visible)}
         />
       </View>

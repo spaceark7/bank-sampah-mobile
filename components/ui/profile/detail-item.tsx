@@ -1,8 +1,8 @@
 import { StyleSheet } from 'react-native'
 import React, { ReactNode } from 'react'
-import { DateFormatter } from '@/utils/types'
 import { useTheme } from '@rneui/themed'
 import { Text, View } from '@/components/Themed'
+import { DateFormatter } from '@/utils/helpers/Functions'
 
 type DetailItemProps = {
   label: string

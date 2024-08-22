@@ -147,6 +147,7 @@ export default function ProfileScreen() {
     router.push({
       pathname: '/edit-modal',
       params: {
+        title: `Edit ${param}`,
         name: param,
         segment: segment,
       },

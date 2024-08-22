@@ -1,42 +1,42 @@
+import { useTheme } from '@rneui/themed'
 import Toast from 'react-native-root-toast'
-import { useTheme } from '@ui-kitten/components'
 
 interface ToastParams {
   message: string
   type: 'error' | 'success' | 'info' | 'warning'
-  position?: number
+  position?: 'top' | 'bottom'
 }
 
 const useToast = () => {
-  const theme = useTheme()
-  const showToast = ({
-    message,
-    type,
-    position = Toast.positions.TOP + 20,
-  }: ToastParams) => {
+  const { theme } = useTheme()
+  const showToast = ({ message, type, position = 'bottom' }: ToastParams) => {
     Toast.show(message, {
-      position: position,
+      position: !position
+        ? Toast.positions.TOP + 80
+        : position === 'top'
+        ? Toast.positions.TOP + 80
+        : Toast.positions.BOTTOM - 40,
       duration: Toast.durations.LONG,
       backgroundColor:
         type === 'success'
-          ? theme['color-success-100']
+          ? theme.colors.primary
           : type === 'error'
-          ? theme['color-danger-100']
+          ? theme.colors.dangerMessageBg
           : type === 'warning'
-          ? theme['color-warning-100']
+          ? theme.colors.warningMessageBg
           : type === 'info'
-          ? theme['color-info-100']
-          : theme['color-primary-100'],
+          ? theme.colors.infoMessageBg
+          : theme.colors.background,
       textColor:
         type === 'success'
-          ? theme['color-success-500']
+          ? theme.colors.textColor
           : type === 'error'
-          ? theme['color-danger-500']
+          ? theme.colors.dangerTextColor
           : type === 'warning'
-          ? theme['color-warning-500']
+          ? theme.colors.warningTextColor
           : type === 'info'
-          ? theme['color-info-500']
-          : theme['color-primary-500'],
+          ? theme.colors.infoTextColor
+          : theme.colors.shade500,
     })
   }
   return { showToast }

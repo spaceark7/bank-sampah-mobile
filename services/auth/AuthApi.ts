@@ -14,8 +14,10 @@ export class AuthApi {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          
         },
         body: JSON.stringify(param),
+        
         signal: controller.signal,
       })
 

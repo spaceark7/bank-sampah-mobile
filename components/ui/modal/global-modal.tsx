@@ -1,6 +1,6 @@
 import { View } from '@/components/Themed'
 import { DialogActions } from '@rneui/base/dist/Dialog/Dialog.Actions'
-import { Dialog, useTheme } from '@rneui/themed'
+import { Button, Dialog, useTheme } from '@rneui/themed'
 import React from 'react'
 
 type GlobalModalProps = {
@@ -32,8 +32,8 @@ const GlobalModalService: React.FC<GlobalModalProps> = ({
       <Dialog.Title title={title} />
       <View>{children}</View>
       <DialogActions>
-        <Dialog.Button text title={buttonTitle ?? 'Logout'} onPress={action} />
-        <Dialog.Button
+        <Button text title={buttonTitle ?? 'Logout'} onPress={action} />
+        <Button
           color={'secondary'}
           text
           title='Kembali'

@@ -2,11 +2,12 @@ import { ListItem, useTheme } from '@rneui/themed'
 import { Fragment, ReactElement, forwardRef, useState } from 'react'
 
 interface ListCardItemProps {
-  title: string
-  description: string
+  title?: string
+  description?: string
   accessoryLeft?: ReactElement
   accessoryRight?: ReactElement
   onPress?: () => void
+  children?: ReactElement
 }
 
 const ListCardItem = forwardRef(
@@ -17,6 +18,7 @@ const ListCardItem = forwardRef(
       accessoryLeft,
       accessoryRight,
       onPress,
+      children,
     }: ListCardItemProps,
     ref
   ) => {
@@ -35,8 +37,11 @@ const ListCardItem = forwardRef(
       <ListItem>
         {accessoryLeft ? accessoryLeft : <Fragment />}
         <ListItem.Content>
-          <ListItem.Title>{title}</ListItem.Title>
-          <ListItem.Subtitle>{description}</ListItem.Subtitle>
+          {children ? children : null}
+          {title ? <ListItem.Title>{title}</ListItem.Title> : null}
+          {description ? (
+            <ListItem.Subtitle>{description}</ListItem.Subtitle>
+          ) : null}
         </ListItem.Content>
         {accessoryRight ? (
           <ListItem.Content right>{accessoryRight}</ListItem.Content>
@@ -45,5 +50,14 @@ const ListCardItem = forwardRef(
     )
   }
 )
+
+export const Container = ({ children }: { children: React.ReactNode }) => {
+  return <ListItem.Content>{children}</ListItem.Content>
+}
+
+export const ListCard = {
+  Item: ListCardItem,
+  Container,
+}
 
 export default ListCardItem

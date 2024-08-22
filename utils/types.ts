@@ -27,9 +27,25 @@ export interface Meta {
   hasNextPage: boolean
   hasPreviousPage: boolean
 }
+export type Filters = {
+  title?: string
+  type?: 'checkbox' | 'radio' | 'date'
+  options?: { label: string; value: string }[]
+  value: string | undefined
+  condition:
+    | 'eq'
+    | 'ne'
+    | 'gt'
+    | 'lt'
+    | 'gte'
+    | 'lte'
+    | 'contains'
+    | 'in'
+    | 'notIn'
+  key: string
+}
 
-export interface FilterParam {
-  [key: string]: any
+export interface FilterParam extends Record<string, any> {
   skip?: number
   take?: number
   search?: string
@@ -40,6 +56,7 @@ export interface FilterParam {
   status?: string
   type?: string
   filter?: string
+  filters?: Filters[]
   user_id?: string
   is_deleted?: boolean
   is_active?: string | boolean
@@ -54,7 +71,7 @@ export enum Role {
   USER = 'User',
 }
 
-type CurrencyType =
+export type CurrencyType =
   | 'IDR'
   | 'USD'
   | 'EUR'
@@ -168,81 +185,3 @@ export type DataListResponse<T> = {
  */
 
 //* Functions
-
-export const CurrencyFormatter = (
-  value: number | null | undefined,
-  currency: CurrencyType = 'IDR',
-  locale: string = 'id-ID'
-) => {
-  if (!value) {
-    return '-'
-  }
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency,
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0,
-  }).format(value)
-}
-
-export const DateFormatter = (
-  date: string | Date,
-  locale: string = 'id-ID'
-) => {
-  if (!date) {
-    return '-'
-  }
-  return new Date(date).toLocaleDateString(locale, {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-}
-
-export function getValueFromPath(obj: any, path: string) {
-  return path.split('.').reduce((o, k) => (o || {})[k], obj)
-}
-
-export const filterStatusParse = ({
-  filter,
-}: {
-  filter: Pick<FilterParam, 'is_active'>
-}) => {
-  if (typeof filter.is_active === 'string') {
-    return ''
-  } else {
-    return filter.is_active
-      ? `&is_active=${filter.is_active}`
-      : `&is_active=${filter.is_active}`
-  }
-}
-
-export const queryFilterBuilder = (filter: FilterParam, query: string) => {
-  const queryParams: string[] = []
-
-  Object.keys(filter).forEach((key) => {
-    const value = filter[key]
-    if (value) {
-      if (key === 'date') {
-        if (!value.value) {
-          return
-        }
-        queryParams.push(`${key}=${value.value}&arg_date=${value.arg}`)
-      } else {
-        queryParams.push(`${key}=${value}`)
-      }
-    }
-  })
-
-  return (query += '?' + queryParams.join('&'))
-}
-
-export const Accumulator = (data: any[], key: string) => {
-  return data.reduce((acc: any, item: any) => {
-    if (!acc[item[key]]) {
-      acc[item[key]] = []
-    }
-    acc[item[key]].push(item)
-    return acc
-  }, {})
-}

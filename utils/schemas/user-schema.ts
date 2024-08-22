@@ -2,22 +2,17 @@ import * as yup from 'yup'
 
 // User Related
 const AddressSchema = yup.object({
-  address: yup.string(),
-  // .required('Alamat tidak boleh kosong'),
-  village: yup.string(),
-  // .required('Desa tidak boleh kosong'),
-  district: yup.string(),
-  // .required('Kecamatan tidak boleh kosong'),
-  city: yup.string(),
-  // .required('Kota tidak boleh kosong'),
-  province: yup.string(),
-  // .required('Provinsi tidak boleh kosong'),
+  address: yup.string().required('Alamat tidak boleh kosong'),
+  village: yup.string().required('Desa tidak boleh kosong'),
+  district: yup.string().required('Kecamatan tidak boleh kosong'),
+  city: yup.string().required('Kota tidak boleh kosong'),
+  province: yup.string().required('Provinsi tidak boleh kosong'),
   postal_code: yup
     .string()
     .matches(/^[0-9]+$/, 'Kode pos tidak valid')
     .min(5, 'Kode pos tidak valid')
-    .max(5, 'Kode pos tidak valid'),
-  // .required('Kode pos tidak boleh kosong'),
+    .max(5, 'Kode pos tidak valid')
+    .required('Kode pos tidak boleh kosong'),
 })
 
 const UserCitizenSchema = yup.object({
@@ -25,23 +20,25 @@ const UserCitizenSchema = yup.object({
     .string()
     .matches(/^[0-9]+$/, 'Nomor KTP tidak valid')
     .min(16, 'Nomor KTP tidak valid')
-    .max(16, 'Nomor KTP lebih dari 16 digit'),
-  // .required('Nomor KTP kosong'),
+    .max(16, 'Nomor KTP lebih dari 16 digit')
+    .required('Nomor KTP kosong'),
   family_id_number: yup
     .string()
     .matches(/^[0-9]+$/, 'Nomor KK tidak valid')
     .min(16, 'Nomor KK tidak valid')
-    .max(16, 'Nomor KK lebih dari 16 digit'),
-  // .required('Nomor KK tidak boleh kosong'),
+    .max(16, 'Nomor KK lebih dari 16 digit')
+    .required('Nomor KK tidak boleh kosong'),
   id_card_image_url: yup.string().url('URL tidak valid'),
-  gender: yup.string().oneOf(['Male', 'Female'], 'Jenis kelamin tidak valid'),
-  // .required('Jenis kelamin tidak boleh kosong'),
+  gender: yup
+    .string()
+    .oneOf(['Male', 'Female'], 'Jenis kelamin tidak valid')
+    .required('Jenis kelamin tidak boleh kosong'),
   birth_date: yup.date().required('Tanggal lahir tidak boleh kosong'),
   birth_place: yup.string().required('Tempat lahir tidak boleh kosong'),
   marital_status: yup
     .string()
-    .oneOf(['Single', 'Married', 'Divorced'], 'Status pernikahan tidak valid'),
-  // .required('Status pernikahan tidak boleh kosong'),
+    .oneOf(['Single', 'Married', 'Divorced'], 'Status pernikahan tidak valid')
+    .required('Status pernikahan tidak boleh kosong'),
   citizen_image_url: yup.string().url('URL tidak valid'),
   address: AddressSchema.notRequired(),
 })
@@ -88,7 +85,7 @@ const RegisterSchema = yup.object({
     .required('Konfirmasi password tidak boleh kosong')
     .oneOf([yup.ref('password')], 'Password tidak sama'),
   user_detail: UserDetailSchema.required(),
-  is_admin: yup.boolean().default(true),
+  is_admin: yup.boolean().default(false),
 })
 
 export { RegisterSchema, UpdateUserSchema, UserDetailSchema, UserCitizenSchema }

@@ -1,10 +1,11 @@
 import {
   DataListResponse,
+  ErrorResponse,
   FilterParam,
-  queryFilterBuilder,
 } from '@/utils/types'
 import { apiSlice } from '../base-api/api'
 import { TransactionEntity } from './transactions-entities'
+import { queryFilterBuilder } from '@/utils/helpers/Functions'
 
 export const TransactionApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -25,21 +26,23 @@ export const TransactionApiSlice = apiSlice.injectEndpoints({
           : 'transactions'
       },
       serializeQueryArgs: ({ endpointName }) => endpointName,
-      merge: (currentCacheData, newData) => {
-        newData.data.forEach((item) => {
-          const alreadyExist = currentCacheData.data.find(
-            (i) => i.id === item.id
-          )
+      merge: (currentCache, newData) => {
+        // newData.data.forEach((item) => {
+        //   const alreadyExist = currentCacheData.data.find(
+        //     (i) => i.id === item.id
+        //   )
 
-          if (alreadyExist) {
-            return
-          } else {
-            currentCacheData.data.push(item)
-          }
-        })
+        //   if (alreadyExist) {
+        //     return
+        //   } else {
+        //     currentCacheData.data.push(item)
+        //   }
+        // })
+          currentCache.data = newData.data
+          currentCache.meta = newData.meta
       },
       forceRefetch({ currentArg, previousArg }) {
-        return currentArg !== previousArg
+        return currentArg?.page !== previousArg?.page
       },
       providesTags: (result) =>
         result?.data.length
@@ -52,6 +55,59 @@ export const TransactionApiSlice = apiSlice.injectEndpoints({
             ]
           : [{ type: 'Transaction', id: 'LIST' }],
     }),
+
+    getTransactionListByMemberId: builder.query<
+      DataListResponse<TransactionEntity[]>,
+      FilterParam
+    >({
+      query: (filter) => {
+        return filter
+          ? queryFilterBuilder(filter, 'transactions')
+          : 'transactions'
+      },
+      providesTags: (result, error, id) => {
+        return result?.data
+          ? [
+              ...result.data.map(({ id }) => ({
+                type: 'Transaction' as const,
+                id: id,
+              })),
+              { type: 'Transaction', id: 'LIST' },
+            ]
+          : [{ type: 'Transaction', id: 'LIST' }]
+      },
+      keepUnusedDataFor: 0,
+      serializeQueryArgs: ({ endpointName, queryArgs }) => {
+        return endpointName
+      },
+      // Always merge incoming data to the cache entry
+      merge: (currentCache, newItems, { arg }) => {
+        // const existingIds = new Set(currentCache.data.map((i) => i.id))
+
+        // newItems.data.forEach((item) => {
+        //   if (!existingIds.has(item.id)) {
+        //     currentCache.data.push(item)
+        //     existingIds.add(item.id)
+        //   }
+        // })
+
+        // currentCache.data.push(...newItems.data)
+        currentCache.data = newItems.data
+        currentCache.meta = newItems.meta
+      },
+      // Refetch when the page arg changes
+      forceRefetch({ currentArg, previousArg }) {
+        return (
+          currentArg?.page !== previousArg?.page ||
+          currentArg?.limit !== previousArg?.limit ||
+          currentArg?.user_id !== previousArg?.user_id
+        )
+      },
+      transformErrorResponse: (response: { status: string | number }) => {
+        return response as ErrorResponse
+      },
+    }),
+
     // createTransaction: builder.mutation<TransactionEntity, TransactionCreateParam>({
     // query: (params) => ({
     //     url: 'transactions',
@@ -87,4 +143,7 @@ export const TransactionApiSlice = apiSlice.injectEndpoints({
   }),
 })
 
-export const { useGetTransactionsListQuery } = TransactionApiSlice
+export const {
+  useGetTransactionsListQuery,
+  useGetTransactionListByMemberIdQuery,
+} = TransactionApiSlice
